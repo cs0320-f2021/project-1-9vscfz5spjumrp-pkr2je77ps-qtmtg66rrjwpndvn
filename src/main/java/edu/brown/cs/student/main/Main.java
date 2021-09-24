@@ -1,5 +1,36 @@
 package edu.brown.cs.student.main;
 
+/**
+ * Parker's Comments:
+ *    N.B. this is much much better than what I implemented, and
+ *    most of the things I'm about to say I didn't do myself.
+ *
+ * 1) Systems Tests: I like that you added more tests in system/stars. A few
+ * additional tests to think about: All Stars (how many should it read),
+ * Duplicate Star (how does your parser handle a star it's seen before? Error?),
+ * Incorrect Number of Arguments (calling "naive_neighbors" with 4 arguments),
+ * Star Does Not Exist (checking that error prints)
+ *
+ * 2) Unit Tests: You could probably have a bunch of argument checks for the
+ * functions in Stars.java. I know that they're similar to the systems tests,
+ * but whatever
+ *
+ * 3) Interesting choice to put Euclidian Distance function in MathBot. Didn't even think
+ * about using the MathBot. Maybe make this part of the Stars class? Since Mathbot's "add"
+ * and "subtract" are pretty separate from the Stars functionality. I agree that it's still
+ * a math function though, so super subjective there
+ *
+ * 4) Is there a better way to refactor kNearest()? It seems like a super long function.
+ * Not that I did much better, lol.
+ *
+ * 5) Could you use a private instance variable to store the star data? Once you load star data with
+ * "star", you might want to call "naive_neighbors" multiple times with different arguments.
+ * It would be a shame to reload that data every time.
+ *
+ * 6) LOVE all of the refactoring into a Stars class. I was way too lazy and did not do that.
+ *
+ */
+
 import com.google.common.collect.ImmutableMap;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
