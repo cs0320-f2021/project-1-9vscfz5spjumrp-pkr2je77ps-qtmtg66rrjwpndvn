@@ -27,6 +27,27 @@ import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
 /**
+ * Parker's Comments:
+ *    N.B. I did not do most of the things that I'm about to say. So, a lot
+ *    of these comments are also directed at me.
+ *
+ * 1) Unit Testing: fantastic job with StarHandlerTest.java
+ *
+ * 2) Systems Tests: I like that you added more tests in system/stars. A few
+ *  * additional tests to think about: All Stars (how many should it read),
+ *  * Duplicate Star (how does your parser handle a star it's seen before? Error?),
+ *  * Incorrect Number of Arguments (calling "naive_neighbors" with 4 arguments),
+ *  * Star Does Not Exist (checking that error prints)
+ *
+ *  3) Instead of using if/else if/else conditionals, try opting for a switch statement.
+ *
+ *  4) Nice use of TreeMap structure. Is it better to construct while parsing the CSV file or afterward? I'm
+ *  actually not sure. Afterward makes sense if you want to get distance to a set of coordinates.
+ *
+ *  5) Lots of validation going on (new Star creation, headers, etc...) I like it.
+ */
+
+/**
  * The Main class of our project. This is where execution begins.
  */
 public final class Main {
