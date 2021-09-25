@@ -36,6 +36,19 @@ import spark.template.freemarker.FreeMarkerEngine;
 * should implement in my own REPL. 
 */
 
+/**
+* Benji's Comments:
+* 1) Object Oriented Design (OOAD): Consider moving some of your command line argument parsing
+*    into a separate class. That said, your use of regex makes this step super concise already, 
+*    which is awesome!
+* 
+* 2) Testing: It looks like you've some todos left for a fair number of edge cases.  
+*
+* 3) Comments: You could add some more inline comments, especially to break down and explain 
+*    the regex and parsing steps. That would be super helpful to understand your code and your
+*    thought process!
+*/
+
 //TODO:
 // TESTING:
 // 1) call stars twice and make sure data is freshly loaded
