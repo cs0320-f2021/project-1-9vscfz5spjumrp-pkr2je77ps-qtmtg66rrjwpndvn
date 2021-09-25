@@ -18,6 +18,24 @@ import spark.Spark;
 import spark.TemplateViewRoute;
 import spark.template.freemarker.FreeMarkerEngine;
 
+/**
+* Alyssa's comments:
+* 
+* 1. Testing: I think it would be good to add some systems and unit tests
+* just to make sure everything works okay with edge cases!
+*
+* 2. I really like that there's a separate star class -- to move functionality
+* away from Main, you could consider moving everything that has to do with 
+* Star to that class. 
+*
+* 3. I like how you had a regex to split up arguments while making sure to keep
+* strings in quotations together! That's super interesting and I never thought 
+* of that.
+*
+* 4. The switch statements make this easy to read and is definitely something I 
+* should implement in my own REPL. 
+*/
+
 //TODO:
 // TESTING:
 // 1) call stars twice and make sure data is freshly loaded
