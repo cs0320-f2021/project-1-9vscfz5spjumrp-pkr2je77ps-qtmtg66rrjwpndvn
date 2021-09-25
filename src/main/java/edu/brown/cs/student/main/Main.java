@@ -48,6 +48,27 @@ import spark.template.freemarker.FreeMarkerEngine;
  */
 
 /**
+* Benji's Comments:
+* 1) Object Oriented Design (OOAD): Great class structure overall - you've separated functionality into varoius 
+*    well-documented methods and fields of the Star and StarHandler classes. 
+*    I think you could have also used one class since Star and StarHandler are closely related 
+*    (i.e. Star contains the calculateStarDistanceCoord which is required for naiveNeighbors in StarHandler). 
+*    This might make your code more concise and avoid the need for getter methods in Star
+* 
+* 2) Testing: Spectacular test coverage, especially for your StarHandler class. 
+*    I might suggest checking if you support space-separated star names like "My Super Long Star Name"
+*    which would result in an argument array with length greater than 5.
+*    Your nested if statement in Main appears to handle only argument arrays that have length 3 and 5. 
+*    And if I misread your code and you do actually handle this, my bad!
+*
+* 3) I like how you've got three tiers of error messages in Main that describe precisely what went 
+*    wrong with input processing - a very user-friendly addition! Do consider throwing a Java exception
+*    instead of printing to the console (though I'm not entirely sure if this makes a difference)
+*
+* 4) TreeMap wow, very nice. I didn't think of that at all. 
+*/
+
+/**
  * The Main class of our project. This is where execution begins.
  */
 public final class Main {
