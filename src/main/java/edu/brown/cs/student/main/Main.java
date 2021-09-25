@@ -31,6 +31,23 @@ package edu.brown.cs.student.main;
  *
  */
 
+/**
+* Alyssa's Comments:
+* 1. I think kNearest() could be made into two separate functions? You could overload the same method
+* name, and since the two methods would take in a different number and types of parameters (one 
+* would have parameters with k and coordinates, and the other would have k and a String), you could
+* call the appropriate function based on the number of arguments the REPL took in.
+*
+* 2. I like how clean your REPL code is, it's really easy and straightforward to read which is nice
+* (the same cannot be said for my REPL, so I really noticed it in yours!). 
+*
+* 3. I really like the Stars class!! Heck yeah single responsibility code!!
+*
+* 4. As Parker mentioned, I'm not sure MathBot is the right place to put the Euclidean distance
+* calculation, just since the mathbot operations are quite separate from the stars operations,
+* but again, that's also subjective.
+*/
+
 import com.google.common.collect.ImmutableMap;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
