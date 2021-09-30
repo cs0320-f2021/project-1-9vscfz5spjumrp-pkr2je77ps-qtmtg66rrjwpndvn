@@ -10,12 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-  private Connection conn;
+  // connection shared across all DataManager instances
+  private static Connection conn;
 
   public DataManager(String databaseFile) throws SQLException, ClassNotFoundException {
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + databaseFile;
-    this.conn = DriverManager.getConnection(urlToDB);
+    conn = DriverManager.getConnection(urlToDB);
   }
 
   public void insert(Object obj) throws Exception {

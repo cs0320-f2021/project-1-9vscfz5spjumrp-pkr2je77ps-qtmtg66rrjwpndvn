@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import com.google.common.collect.ImmutableMap;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
+import joptsimple.OptionSpec;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
 import spark.Request;
@@ -60,6 +62,20 @@ public final class REPLMain {
     OptionSet options = parser.parse(args);
     if (options.has("gui")) {
       runSparkServer((int) options.valueOf("port"));
+    }
+
+    OptionSpec<String> databaseSpec =
+        parser.accepts("database").withRequiredArg().ofType(String.class);
+
+    DataManager manager = null;
+    // support providing db file via cmd line argument --database=path/to/database
+    if (options.has("database")) {
+      try {
+        manager = new DataManager(options.valueOf(databaseSpec));
+      } catch (SQLException | ClassNotFoundException e) {
+        System.err.println("SQLite error: " + e.getMessage());
+        System.exit(1);
+      }
     }
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
@@ -128,6 +144,27 @@ public final class REPLMain {
               }
               break;
             case "database":
+              try {
+                manager = new DataManager(arguments[1]);
+              } catch (SQLException e) {
+                System.err.println("SQLite error: " + e.getMessage());
+                System.exit(1);
+              }
+              break;
+            case "insert":
+              Users user = new Users();
+              user.setAge("10");
+              user.setUser_id("5");
+              user.setBody_type("athletic");
+              user.setHeight("short");
+              user.setBust_size("blah");
+              user.setWeight("blah");
+              user.setHoroscope("gemini");
+              if (manager != null) {
+                manager.update(user, "horoscope", "aries");
+              } else {
+                System.out.println("ERROR: database file was not set.");
+              }
               break;
             default:
               System.out.println("ERROR: Invalid command.");
