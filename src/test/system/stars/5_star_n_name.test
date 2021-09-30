@@ -1,5 +1,0 @@
-INPUT
-stars data/stars/invalid-star-header.csv
-OUTPUT
-ERROR:
-END
