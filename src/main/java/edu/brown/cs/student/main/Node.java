@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.util.List;
+
 interface Node {
   Node left = null;
   Node right = null;
@@ -17,6 +19,8 @@ interface Node {
   void setRight(Node rightChild);
 
   void setLeft(Node leftChild);
+
+  double getEuclidianDistance(Object target, List<Integer> propertyIndices);
 
 
 }

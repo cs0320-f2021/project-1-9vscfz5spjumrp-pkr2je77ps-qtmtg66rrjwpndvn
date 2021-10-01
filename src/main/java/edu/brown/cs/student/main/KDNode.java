@@ -2,8 +2,6 @@ package edu.brown.cs.student.main;
 
 import java.util.List;
 
-//TODO: write interface for Node and then write class as KDNode
-
 public final class KDNode implements Node {
   private Node left;
   private Node right;
@@ -55,6 +53,23 @@ public final class KDNode implements Node {
   }
 
   /**
+   * This method takes in an object and the properties we'd like to compare our Node to. This method
+   * returns the summed Euclidian distance over the number of provided indices.
+   * @param target
+   * @param propertyIndices
+   * @return
+   */
+  @Override
+  public double getEuclidianDistance(Node node, Object target, List<Integer> propertyIndices) {
+    double sum = 0;
+    for (int index : propertyIndices) {
+      double difference = target.getField(index) - node.val.getField(index);
+      sum += Math.pow(difference, 2);
+    }
+    return sum;
+  }
+
+  /**
    * Getter method for Node's right child.
    *
    * @return right
@@ -65,7 +80,7 @@ public final class KDNode implements Node {
   }
 
   /**
-   * Setter method to set Node's right child
+   * Setter method to set Node's right child.
    *
    * @param rightChild: right child
    */
@@ -83,16 +98,5 @@ public final class KDNode implements Node {
   public int getDepth() {
     return depth;
   }
-
-//  //TODO: how do we make this generic to any type of thing. This actually needs to be a method of record.
-//  // Make interface that says it has this function, then we don't have to worry about it.
-//  public <T extends Comparable<T>> double getEuclidianDistance(Node node, List<Integer> propertyIndices) {
-//    //TODO: type check things
-//    double sum = 0;
-//    for (int index : propertyIndices) {
-//      double difference = (double) this.getVal().get(index) - (double) node.getVal().get(index);
-//      sum += Math.pow(difference, 2);
-//    }
-//    return sum;
-//  }
 }
+
