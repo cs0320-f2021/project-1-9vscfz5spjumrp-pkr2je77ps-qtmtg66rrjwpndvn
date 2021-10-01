@@ -55,18 +55,20 @@ public final class KDNode implements Node {
   /**
    * This method takes in an object and the properties we'd like to compare our Node to. This method
    * returns the summed Euclidian distance over the number of provided indices.
+   *
    * @param target
    * @param propertyIndices
    * @return
    */
   @Override
   public double getEuclidianDistance(Node node, Object target, List<Integer> propertyIndices) {
-    double sum = 0;
-    for (int index : propertyIndices) {
-      double difference = target.getField(index) - node.val.getField(index);
-      sum += Math.pow(difference, 2);
-    }
-    return sum;
+//    double sum = 0;
+//    for (int index : propertyIndices) {
+//      double difference = target.getField(index) - node.val.getField(index);
+//      sum += Math.pow(difference, 2);
+//    }
+//    return sum;
+    return 0;
   }
 
   /**

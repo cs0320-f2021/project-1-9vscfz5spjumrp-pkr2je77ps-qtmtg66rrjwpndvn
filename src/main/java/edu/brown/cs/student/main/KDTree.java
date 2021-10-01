@@ -101,10 +101,10 @@ final class KDTree {
     Node node = root;
     //get Euclidian distance
 
-    double distance = node.getEuclidianDistance(target, propertyIndices);
+//    double distance = node.getEuclidianDistance(target, propertyIndices);
 
     //update nearestNeighbors if under limit or if this is a better neighbor
-    if (nearestNeighbors.size() < k || distance)
+//    if (nearestNeighbors.size() < k || distance)
 
     // find relevant axis by depth
 

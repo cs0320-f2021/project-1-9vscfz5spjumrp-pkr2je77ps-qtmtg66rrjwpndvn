@@ -20,7 +20,7 @@ interface Node {
 
   void setLeft(Node leftChild);
 
-  double getEuclidianDistance(Object target, List<Integer> propertyIndices);
+  double getEuclidianDistance(Node node, Object target, List<Integer> propertyIndices);
 
 
 }
