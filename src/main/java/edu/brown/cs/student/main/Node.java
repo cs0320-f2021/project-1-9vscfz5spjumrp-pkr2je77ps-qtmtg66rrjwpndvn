@@ -2,10 +2,16 @@ package edu.brown.cs.student.main;
 
 import java.util.List;
 
+//TODO: write interface for Node and then write class as KDNode
+
+/**
+ * Should T just extend a list
+ * @param <T>
+ */
 public final class Node<T extends Comparable<T>> {
   private Node left;
   private Node right;
-  private final List<T> val;
+  private final T val;
   private final int depth;
 
   /**
@@ -15,7 +21,7 @@ public final class Node<T extends Comparable<T>> {
    * @param val:   item to be stored in the Node
    * @param depth: how deep the Node is in the tree
    */
-  Node(List<T> val, int depth) {
+  Node(T val, int depth) {
     left = null;
     right = null;
     this.val = val;
@@ -27,7 +33,7 @@ public final class Node<T extends Comparable<T>> {
    *
    * @return val
    */
-  public List<T> getVal() {
+  public T getVal() {
     return val;
   }
 
@@ -76,7 +82,8 @@ public final class Node<T extends Comparable<T>> {
     return depth;
   }
 
-  //TODO: how do we make this generic to any type of thing
+  //TODO: how do we make this generic to any type of thing. This actually needs to be a method of record.
+  // Make interface that says it has this function, then we don't have to worry about it.
   public <T extends Comparable<T>> double getEuclidianDistance(Node node, List<Integer> propertyIndices) {
     //TODO: type check things
     double sum = 0;

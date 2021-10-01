@@ -11,13 +11,6 @@ final class KDTree {
 
   private Node root = null;
 
-  /**
-   * The Node class has a right and left child, the value that the node stores,
-   * and the depth of the tree that the Node is at.
-   *
-   * @param <T>
-   */
-
 
   /**
    * a KDTree must take in a list of objects that it wants to store, as well as how
@@ -44,7 +37,7 @@ final class KDTree {
     T val = vals.get(median);
 
     //create a node out of that middle element
-    Node node = new Node((List) val, depth);
+    Node node = new Node(val, depth);
 
     //set root
     root = node;
@@ -61,7 +54,7 @@ final class KDTree {
    * @param depth:      how deep we are in the KDTree
    * @param dimensions: how many dimensions we have
    */
-  private <T extends Comparable<T>> Node kDTreeBuilder(List<T> vals, int depth, int dimensions) {
+  private <T extends Comparable<? super T>> Node kDTreeBuilder(List<T> vals, int depth, int dimensions) {
     //check for invalid inputs
     if (vals == null || dimensions == 0) {
       throw new IllegalArgumentException("You did not provide valid inputs to the KD"
@@ -83,7 +76,7 @@ final class KDTree {
     T val = vals.get(median);
 
     //create a node out of that middle element
-    Node node = new Node((List) val, depth);
+    Node node = new Node(val, depth);
 
     //set children
     node.setLeft(kDTreeBuilder(vals.subList(0, median), depth + 1, dimensions));
@@ -94,8 +87,9 @@ final class KDTree {
   /**
    * kNearestNeighbors takes in an Object and finds the k nearest neighbors to that Object based
    * on a list of given properties.
-   *
+   * <p>
    * TODO: change target type to something else.
+   *
    * @param node
    * @param k
    * @param propertyIndices
