@@ -110,11 +110,48 @@ final class KDTree {
     /**
      * My current questions:
      * 1) How do we know what properties we're going to test on if this is generic?
+     *
+     * => Benji: By properties, I assume you mean the given user_id, weight, height, or age. I think
+     *           we use the values passed via the command line to either find (if given a user_id)
+     *           or construct (if given 1-3 of weight, height, age) a node that we search around.
+     *
+     *           i.e.
+     *           (1) similar 5 151944 => similar <k> <user_id> => find existing node
+     *           (2) similar 5 190 70 21 => similar <k> <weight> <height> <age> => create new node
+     *
+     *           So to make this generic, we'd assume that we could get any number of int arguments
+     *           representing some properties via the REPL.
+     *
+     *           (3) similar 5 190 70 21 40 50 => similar <k> <prop1> <prop2> <prop3> <prop4> <prop5>
+     *
+     *           Here we'd construct a 5 dimensional node with props 1 through 5.
+     *
      * 2) What exactly is target? Are we given a Node? Are we given a list of ints? If it's the latter,
      * how do we know what we're comparing to?
+     *
+     * => Benji: I think we are given either
+     *    (1) a user_id, or
+     *    (2) 1-3 of {weight in lbs, height in inches, age in years}
+     *
+     *    So in our KD tree we need to either
+     *    (1) find the node that corresponds to the given user_id, or
+     *    (2) construct a node given 1-3 dimensions of data
+     *    That is our *target*.
+     *
+     *    I think the input *node* is simply the root node of our KD tree that we begin our search from.
+     *
      * 3) Why am I having issues with Node not being a concrete class?
+     *
+     *    Benji: you mean that not all methods can be/are implemented in Node?
+     *    I don't think we need to calculate euclidean distance for n dimensions? That would
+     *    get pretty involved computationally.
+     *
      * 4) What's the level of generality that we're looking for? Can my Node store a SQL row? Or can
      * it not know what it's storing?
+     *
+     *    I think it should store an object representation of a SQL row. So essentially an object
+     *    with an arbitrary number of fields. The Node object itself wouldn't know what it's storing
+     *    unless we use Java's reflection API like in the ORM to extract its fields.
      */
     double distance = node.getEuclidianDistance(target, propertyIndices);
 
