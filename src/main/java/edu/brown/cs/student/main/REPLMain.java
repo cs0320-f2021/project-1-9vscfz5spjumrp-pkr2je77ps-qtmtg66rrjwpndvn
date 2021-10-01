@@ -152,6 +152,10 @@ public final class REPLMain {
               }
               break;
             case "insert":
+              if (manager == null) {
+                System.out.println("ERROR: database file was not set.");
+                break;
+              }
               Users user = new Users();
               user.setAge("10");
               user.setUser_id("5");
@@ -160,12 +164,15 @@ public final class REPLMain {
               user.setBust_size("blah");
               user.setWeight("blah");
               user.setHoroscope("gemini");
-              if (manager != null) {
-                manager.update(user, "horoscope", "aries");
-              } else {
-                System.out.println("ERROR: database file was not set.");
-              }
+              manager.insert(user);
               break;
+//            case "update":
+//              if (manager == null) {
+//                System.out.println("ERROR: database file was not set.");
+//                break;
+//              }
+//              manager.update(user, "horoscope", "aries");
+//              break;
             default:
               System.out.println("ERROR: Invalid command.");
           }
