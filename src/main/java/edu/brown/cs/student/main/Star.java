@@ -1,50 +1,85 @@
 package edu.brown.cs.student.main;
 
-public final class Star {
+/**
+ * class for Star
+ */
+class Star {
+  /** StarID */
+  private final int starID;
+  /** {ProperName} */
+  private final String properName;
+  /** X coord */
+  private final float x;
+  /** Y coord */
+  private final float y;
+  /** Z coord */
+  private final float z;
 
-    private final int starID;
-    private final String properName;
-    private final double x;
-    private final double y;
-    private final double z;
+  /**
+   * constructor for Star
+   * @param starID
+   * @param properName
+   * @param x
+   * @param y
+   * @param z
+   */
+  protected Star(int starID, String properName, float x, float y, float z) {
+    this.starID = starID;
+    this.properName = properName;
+    this.x = x;
+    this.y = y;
+    this.z = z;
+  }
 
-    /**
-     * Regular constructor.
-     * @param starID
-     * @param properName
-     * @param x
-     * @param y
-     * @param z
-     */
-    public Star(int starID, String properName, double x, double y, double z) {
-        this.starID = starID;
-        this.properName = properName;
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
+  /**
+   * getter for properName
+   * @return name
+   */
+  public String getProperName() {
+    return properName;
+  }
 
-    public double getX() {
-        return x;
-    }
+  /**
+   * getter for starID
+   * @return id
+   */
+  public int getStarID() {
+    return starID;
+  }
 
-    public double getY() {
-        return y;
-    }
+  /**
+   * getter for x coordinate
+   * @return x
+   */
+  public float getX() {
+    return x;
+  }
 
-    public double getZ() {
-        return z;
-    }
+  /**
+   * getter for y coordinate
+   * @return y
+   */
+  public float getY() {
+    return y;
+  }
 
-    public final double getEuclidianDistance(double x, double y, double z) {
-        return Math.sqrt(Math.pow(this.x - x, 2) + Math.pow(this.y - y, 2) + Math.pow(this.z - z, 2));
-    }
+  /**
+   * getter for z coordinate
+   * @return z
+   */
+  public float getZ() {
+    return z;
+  }
 
-    public final int getStarID() {
-        return this.starID;
-    }
-
-    public final String getProperName() {
-        return this.properName;
-    }
+  /**
+   * Method to calculate Euclidean distance between star and given coordinates
+   * @param xCoord - x coordinate
+   * @param yCoord - y coordinate
+   * @param zCoord - z coordinate
+   * @return float, euclidean distance between this star and the coordinates
+   */
+  public float calculateStarDistanceCoord(float xCoord, float yCoord, float zCoord) {
+    return (float) Math.sqrt((xCoord - this.x) * (xCoord - this.x)
+        + (yCoord - this.y) * (yCoord - this.y) + (zCoord - this.z) * (zCoord - this.z));
+  }
 }

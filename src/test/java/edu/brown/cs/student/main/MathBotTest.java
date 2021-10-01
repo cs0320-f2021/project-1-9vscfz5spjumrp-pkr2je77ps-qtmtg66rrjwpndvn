@@ -27,32 +27,73 @@ public class MathBotTest {
     assertEquals(1, output, 0.01);
   }
 
-  // TODO: add more unit tests of your own
   @Test
-  public void testSubtractZero() {
-    MathBot bot = new MathBot();
-    double output = bot.subtract(18, 18);
-    assertEquals(0, output, 0.01);
+  public void testNegativeAddition() {
+    MathBot matherator9003 = new MathBot();
+    double output = matherator9003.add(4, -1);
+    assertEquals(3.0, output, 0.01);
   }
 
   @Test
-  public void testAddZero() {
-    MathBot bot = new MathBot();
-    double output = bot.add(0, 18);
-    assertEquals(18, output, 0.01);
+  public void testAllNegativeAddition() {
+    MathBot matherator9008 = new MathBot();
+    double output = matherator9008.add(-4, -1);
+    assertEquals(-5.0, output, 0.01);
   }
 
   @Test
-  public void testAddNegative() {
-    MathBot bot = new MathBot();
-    double output = bot.add(-10, 18);
-    assertEquals(8, output, 0.01);
+  public void testZeroAddition() {
+    MathBot matherator9004 = new MathBot();
+    double output = matherator9004.add(0, 0);
+    assertEquals(0.0, output, 0.01);
   }
 
   @Test
-  public void testSubtractNegative() {
-    MathBot bot = new MathBot();
-    double output = bot.subtract(10, -18);
-    assertEquals(28, output, 0.01);
+  public void testAdditionWithZero() {
+    MathBot matherator9005 = new MathBot();
+    double output = matherator9005.add(4, 0);
+    assertEquals(4.0, output, 0.01);
+  }
+
+  @Test
+  public void testNegativeSubtraction() {
+    MathBot matherator9006 = new MathBot();
+    double output = matherator9006.subtract(4, -1);
+    assertEquals(5.0, output, 0.01);
+  }
+
+  @Test
+  public void testAllNegativeSubtraction() {
+    MathBot matherator9007 = new MathBot();
+    double output = matherator9007.subtract(-4, -1);
+    assertEquals(-3.0, output, 0.01);
+  }
+
+  @Test
+  public void testAllNegativeSubtractionFlipped() {
+    MathBot matherator9011 = new MathBot();
+    double output = matherator9011.subtract(-1, -4);
+    assertEquals(3.0, output, 0.01);
+  }
+
+  @Test
+  public void testZeroSubtraction() {
+    MathBot matherator9009 = new MathBot();
+    double output = matherator9009.subtract(0, 4);
+    assertEquals(-4.0, output, 0.01);
+  }
+
+  @Test
+  public void testZeroSubtractionFlipped() {
+    MathBot matherator9010 = new MathBot();
+    double output = matherator9010.subtract(4, 0);
+    assertEquals(4.0, output, 0.01);
+  }
+
+  @Test
+  public void testSubtractionWithDecimals() {
+    MathBot matherator9011 = new MathBot();
+    double output = matherator9011.subtract(4.0, 1.0);
+    assertEquals(3.0, output, 0.01);
   }
 }
