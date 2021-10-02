@@ -12,6 +12,8 @@ import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.main.ORM.DataManager;
+import edu.brown.cs.student.main.ORM.Users;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

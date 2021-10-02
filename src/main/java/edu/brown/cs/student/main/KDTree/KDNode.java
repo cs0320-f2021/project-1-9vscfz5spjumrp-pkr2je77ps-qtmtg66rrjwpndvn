@@ -1,4 +1,7 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.KDTree;
+
+import edu.brown.cs.student.main.ORM.ClassInfoUtil;
+import edu.brown.cs.student.main.ORM.FieldInfo;
 
 import java.beans.IntrospectionException;
 import java.lang.reflect.InvocationTargetException;
@@ -58,9 +61,9 @@ public final class KDNode implements Node {
    * This method takes in an object and the properties we'd like to compare our Node to. This method
    * returns the summed Euclidian distance over the number of provided indices.
    *
-   * @param target
-   * @param propertyIndices
-   * @return
+   * @param target          : target Object we are comparing against
+   * @param propertyIndices : list of indices for properties we want to index into
+   * @return euclidean distance
    */
   @Override
   public double getEuclideanDistance(Object target, List<Integer> propertyIndices)
@@ -72,13 +75,21 @@ public final class KDNode implements Node {
 
     double sum = 0;
     for (int index : propertyIndices) {
-      double difference = (Integer) targetFields.get(index).readMethod.invoke(target) -
-          (Integer) nodeFields.get(index).readMethod.invoke(val);
+      double difference = (Integer) targetFields.get(index).readMethod.invoke(target)
+          - (Integer) nodeFields.get(index).readMethod.invoke(val);
       sum += Math.pow(difference, 2);
     }
     return sum;
   }
 
+  /**
+   * This method returns the straight-line distance between a Node and its target on the relevant
+   * axis.
+   *
+   * @param target        : target Object we are comparing against
+   * @param propertyIndex : index for property we want to index into
+   * @return axis distance
+   */
   @Override
   public double getAxisDistance(Object target, int propertyIndex)
       throws IntrospectionException, InvocationTargetException, IllegalAccessException {
@@ -90,6 +101,12 @@ public final class KDNode implements Node {
         - (Integer) nodeFields.get(propertyIndex).readMethod.invoke(val);
   }
 
+  /**
+   * This getter method returns the coordinate of a Node, as specified by the property index.
+   *
+   * @param propertyIndex : index for property we want to index into
+   * @return coordinate
+   */
   @Override
   public int getCoordinate(int propertyIndex)
       throws IntrospectionException, InvocationTargetException, IllegalAccessException {
