@@ -24,17 +24,22 @@ final class KDTree {
   <T extends Comparable<T>> KDTree(List<T> vals, int dimensions) {
     //check for invalid inputs
     if (vals == null || dimensions == 0) {
-      throw new IllegalArgumentException("You did not provide valid inputs to the KD"
-          + "Tree Constructor. Either your inputed lists of vals was null or you wanted "
-          + "to sort on 0 dimensions");
+      throw new IllegalArgumentException("You did not provide valid inputs to the KD" +
+          "Tree Constructor. Either your inputed lists of vals was null or you wanted " +
+          "to sort on 0 dimensions");
     }
 
-    //TODO: implement comparable method so that we can sort on correct axis
-    Collections.sort(vals);
+    List<SortableByAxis<T>> values = new ArrayList<>();
+    for (T val : vals) {
+      SortableByAxis<T> s = new SortableByAxis<>(val);
+      values.add(s);
+    }
+
+    Collections.sort(values);
 
     //get the middle element
     int median = vals.size() / 2;
-    T val = vals.get(median);
+    SortableByAxis val = values.get(median);
 
     //create a node out of that middle element
     Node node = new KDNode(val, 0);
@@ -43,8 +48,8 @@ final class KDTree {
     root = node;
 
     //set children
-    node.setLeft(kDTreeBuilder(vals.subList(0, median), 1, dimensions));
-    node.setRight(kDTreeBuilder(vals.subList(median, vals.size()),  1, dimensions));
+    node.setLeft(kDTreeBuilder(values.subList(0, median), 1, dimensions));
+    node.setRight(kDTreeBuilder(values.subList(median, vals.size()), 1, dimensions));
   }
 
   /**
@@ -54,13 +59,13 @@ final class KDTree {
    * @param depth:      how deep we are in the KDTree
    * @param dimensions: how many dimensions we have
    */
-  private <T extends Comparable<? super T>> Node kDTreeBuilder(List<T> vals, int depth,
+  private <T extends Comparable<T>> Node kDTreeBuilder(List<SortableByAxis<T>> vals, int depth,
                                                                int dimensions) {
     //check for invalid inputs
     if (vals == null || dimensions == 0) {
-      throw new IllegalArgumentException("You did not provide valid inputs to the KD"
-          + "Tree Constructor. Either your inputed lists of vals was null or you wanted "
-          + "to sort on 0 dimensions");
+      throw new IllegalArgumentException("You did not provide valid inputs to the KD" +
+          "Tree Constructor. Either your inputted lists of vals was null or you wanted " +
+          "to sort on 0 dimensions");
     }
 
     //Base case: return if there is nothing left to sort
@@ -68,14 +73,15 @@ final class KDTree {
       return null;
     }
 
-    //TODO: implement comparable method so that we can sort on correct axis
-    int axis = depth % dimensions;
+    for (SortableByAxis<T> val : vals) {
+      val.setAxis(depth % dimensions);
+    }
 
     Collections.sort(vals);
 
     //get the middle element
     int median = vals.size() / 2;
-    T val = vals.get(median);
+    SortableByAxis<T> val = vals.get(median);
 
     //create a node out of that middle element
     Node node = new KDNode(val, depth);
@@ -127,6 +133,16 @@ final class KDTree {
   private Object classify(Object val, int k, Object property) {
     return null;
   }
+
+  /**
+   * This method sorts the object based on the axis
+   *
+   * @return
+   */
+  private List<Object> sortObjects() {
+    return null;
+  }
+
 }
 
 
