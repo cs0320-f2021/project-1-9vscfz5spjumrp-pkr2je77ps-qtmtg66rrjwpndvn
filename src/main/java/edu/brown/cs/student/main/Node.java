@@ -22,7 +22,13 @@ interface Node {
 
   void setLeft(Node leftChild);
 
-  double getEuclideanDistance(Node node, Object target, List<Integer> propertyIndices)
+  double getEuclideanDistance(Object target, List<Integer> propertyIndices)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+
+  double getAxisDistance(Object target, int propertyIndex)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+
+  int getCoordinate(int propertyIndex)
       throws IntrospectionException, InvocationTargetException, IllegalAccessException;
 
 

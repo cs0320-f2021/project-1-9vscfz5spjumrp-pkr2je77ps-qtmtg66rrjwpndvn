@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,7 +62,7 @@ final class KDTree {
    * @param dimensions: how many dimensions we have
    */
   private <T extends Comparable<T>> Node kDTreeBuilder(List<SortableByAxis<T>> vals, int depth,
-                                                               int dimensions) {
+                                                       int dimensions) {
     //check for invalid inputs
     if (vals == null || dimensions == 0) {
       throw new IllegalArgumentException("You did not provide valid inputs to the KD" +
@@ -93,32 +95,138 @@ final class KDTree {
   }
 
   /**
+   * This is our main function. It relies on kNN(), which reccurs to build the tree.
+   *
+   * @param target
+   * @param k
+   * @param propertyIndices
+   * @return
+   * @throws IntrospectionException
+   * @throws InvocationTargetException
+   * @throws IllegalAccessException
+   */
+  private List<Object> kNearestNeighbors(Object target, int k,
+                                         List<Integer> propertyIndices)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    List<Node> nearestNeighbors = new ArrayList<>();
+
+    nearestNeighbors = kNN(root, target, k, propertyIndices, nearestNeighbors);
+
+    List<Object> nearestObjects = new ArrayList<>();
+    for (Node node : nearestNeighbors) {
+      nearestObjects.add(node.getVal());
+    }
+    return nearestObjects;
+  }
+
+  /**
    * kNearestNeighbors takes in an Object and finds the k nearest neighbors to that Object based
-   * on a list of given properties.
+   * on a list of given properties. SEE HANDOUT: I copied pseudocode from there.
+   * Doc: https://docs.google.com/document/d/1TYUbEgyh7oQEt0nW9pmGO-_PEmnkuGqBfuItbuqFk6s/edit
    *
    * @param target
    * @param k
    * @param propertyIndices
    * @return
    */
-  private List<Object> kNearestNeighbors(Object target, int k, List<Integer> propertyIndices) {
-    Queue<Object> nearestNeighbors = new ArrayDeque<>();
+  private List<Node> kNN(Node node, Object target, int k,
+                         List<Integer> propertyIndices, List<Node> nearestNeighbors)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
 
-    Node node = root;
-    //get Euclidian distance
 
-//    double distance = node.getEuclidianDistance(target, propertyIndices);
+    //    Get the straight-line (Euclidean) distance from your target point to the current node.
+    double distance = node.getEuclideanDistance(target, propertyIndices);
 
-    //update nearestNeighbors if under limit or if this is a better neighbor
-//    if (nearestNeighbors.size() < k || distance)
+//    If the current node is closer to your target point than one of your k-nearest neighbors,
+//    or if your collection of neighbors is not full, update the list accordingly
+    int size = nearestNeighbors.size();
 
-    // find relevant axis by depth
+    if (size == 0) {
+      nearestNeighbors.add(node);
+    } else if (size < k) {
+      int pos = getNodePosition(target, propertyIndices, nearestNeighbors, node);
+      nearestNeighbors.add(pos, node);
+    } else {
+      Node furthestNeighbor = nearestNeighbors.get(0);
+      if (distance
+          < furthestNeighbor.getEuclideanDistance(target, propertyIndices)
+      ) {
+        nearestNeighbors.remove(0);
+        int pos = getNodePosition(target, propertyIndices, nearestNeighbors, node);
+        nearestNeighbors.add(pos, node);
+      }
+    }
 
-    // figure out if you need to recur on both children
+    // find relevant axis by depth. We know that the number of axes is equal to the number of
+    // properties given.
+    int axis = node.getDepth() % propertyIndices.size();
 
-    // if you didn't recur on both children, find out which child to recur on
+//    If the Euclidean distance between the target point and the farthest of the current
+//    “best neighbors” you have so far is greater than the relevant axis distance* between
+//    the current node and target point, recur on both children.
+    Node furthestNeighbor = nearestNeighbors.get(0);
+    double furthestNeighborDistance =
+        furthestNeighbor.getEuclideanDistance(target, propertyIndices);
 
-    return Arrays.asList(nearestNeighbors.toArray());
+    double relevantAxisDistance = node.getAxisDistance(target, axis);
+
+    //recur on both children. Second part of OR operator is found at "**Note:" in handout
+    if (furthestNeighborDistance > relevantAxisDistance || nearestNeighbors.size() < k) {
+      nearestNeighbors = kNN(node.getRight(), target, k, propertyIndices, nearestNeighbors);
+      nearestNeighbors = kNN(node.getLeft(), target, k, propertyIndices, nearestNeighbors);
+    } else {
+//      If the current node's coordinate on the relevant axis is less than the target's coordinate
+//      on the relevant axis, recur on the right child.
+      int targetCoordinate = getTargetCoordinate(target, axis);
+      if (node.getCoordinate(axis) < getTargetCoordinate(target, axis)) {
+        nearestNeighbors = kNN(node.getRight(), target, k, propertyIndices, nearestNeighbors);
+      } else {
+//      Else if the current node's coordinate on the relevant axis is greater than the target's
+//      coordinate on the relevant axis, recur on the left child.
+        nearestNeighbors = kNN(node.getLeft(), target, k, propertyIndices, nearestNeighbors);
+      }
+    }
+    return nearestNeighbors;
+  }
+
+  /**
+   * Helper method invoked in kNN() that gets the target coordinate for a specific property.
+   *
+   * @param target
+   * @param axis
+   * @return
+   * @throws IntrospectionException
+   * @throws InvocationTargetException
+   * @throws IllegalAccessException
+   */
+  private int getTargetCoordinate(Object target, int axis)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
+    return (Integer) targetFields.get(axis).readMethod.invoke(target);
+  }
+
+  /**
+   * This helper method returns the position of a Node in a list. It is used in kNN()
+   * to update the Queue when it has not yet reached k, where k is the number of nearest neighbors
+   * that we want to return.
+   *
+   * @param propertyIndices
+   * @param nearestNeighbors
+   * @param node
+   * @return
+   */
+  private int getNodePosition(Object target, List<Integer> propertyIndices,
+                              List<Node> nearestNeighbors,
+                              Node node)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    for (int i = 0; i < nearestNeighbors.size(); i++) {
+      Node furthestNode = nearestNeighbors.get(i);
+      if (furthestNode.getEuclideanDistance(target, propertyIndices)
+          < node.getEuclideanDistance(target, propertyIndices)) {
+        return i;
+      }
+    }
+    return nearestNeighbors.size();
   }
 
   /**

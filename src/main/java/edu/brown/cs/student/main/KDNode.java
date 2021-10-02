@@ -63,19 +63,38 @@ public final class KDNode implements Node {
    * @return
    */
   @Override
-  public double getEuclideanDistance(Node node, Object target, List<Integer> propertyIndices)
+  public double getEuclideanDistance(Object target, List<Integer> propertyIndices)
       throws IntrospectionException, InvocationTargetException, IllegalAccessException {
 
     // get all the field information from the class
     List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
-    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(node.val.getClass());
+    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
 
     double sum = 0;
     for (int index : propertyIndices) {
-      double difference = (Integer) targetFields.get(index).readMethod.invoke(target) - (Integer) nodeFields.get(index).readMethod.invoke(node.val);
+      double difference = (Integer) targetFields.get(index).readMethod.invoke(target) -
+          (Integer) nodeFields.get(index).readMethod.invoke(val);
       sum += Math.pow(difference, 2);
     }
     return sum;
+  }
+
+  @Override
+  public double getAxisDistance(Object target, int propertyIndex)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    // get all the field information from the class
+    List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
+    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
+
+    return (Integer) targetFields.get(propertyIndex).readMethod.invoke(target)
+        - (Integer) nodeFields.get(propertyIndex).readMethod.invoke(val);
+  }
+
+  @Override
+  public int getCoordinate(int propertyIndex)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
+    return (Integer) nodeFields.get(propertyIndex).readMethod.invoke(val);
   }
 
   /**
