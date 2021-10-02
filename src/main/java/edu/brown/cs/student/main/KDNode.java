@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public final class KDNode implements Node {
@@ -61,14 +63,19 @@ public final class KDNode implements Node {
    * @return
    */
   @Override
-  public double getEuclidianDistance(Node node, Object target, List<Integer> propertyIndices) {
-//    double sum = 0;
-//    for (int index : propertyIndices) {
-//      double difference = target.getField(index) - node.val.getField(index);
-//      sum += Math.pow(difference, 2);
-//    }
-//    return sum;
-    return 0;
+  public double getEuclideanDistance(Node node, Object target, List<Integer> propertyIndices)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
+
+    // get all the field information from the class
+    List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
+    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(node.val.getClass());
+
+    double sum = 0;
+    for (int index : propertyIndices) {
+      double difference = (Integer) targetFields.get(index).readMethod.invoke(target) - (Integer) nodeFields.get(index).readMethod.invoke(node.val);
+      sum += Math.pow(difference, 2);
+    }
+    return sum;
   }
 
   /**

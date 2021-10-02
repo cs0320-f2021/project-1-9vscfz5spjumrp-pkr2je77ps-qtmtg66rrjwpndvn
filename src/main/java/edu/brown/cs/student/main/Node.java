@@ -1,5 +1,7 @@
 package edu.brown.cs.student.main;
 
+import java.beans.IntrospectionException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 interface Node {
@@ -20,7 +22,8 @@ interface Node {
 
   void setLeft(Node leftChild);
 
-  double getEuclidianDistance(Node node, Object target, List<Integer> propertyIndices);
+  double getEuclideanDistance(Node node, Object target, List<Integer> propertyIndices)
+      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
 
 
 }
