@@ -49,7 +49,7 @@ interface Node {
    * @param target : object that we are comparing against.
    * @return euclidean distance
    */
-  double getEuclideanDistance(Object target) throws IllegalAccessException;
+  double getEuclideanDistance(Object target) throws IllegalAccessException, NoSuchFieldException;
 
   /**
    * Gets the straight line distance between a Node and its target on a given axis.

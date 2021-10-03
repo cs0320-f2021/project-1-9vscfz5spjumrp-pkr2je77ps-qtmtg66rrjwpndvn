@@ -15,7 +15,7 @@ public final class KDNode implements Node {
    * @param val:   item to be stored in the Node
    * @param depth: how deep the Node is in the tree
    */
-  KDNode(Object val, int depth) {
+  public KDNode(Object val, int depth) {
     left = null;
     right = null;
     this.val = val;
@@ -53,22 +53,24 @@ public final class KDNode implements Node {
   }
 
   /**
-   * This method takes in an object and a mapping of. This method
-   * returns the summed Euclidean distance over the relevant fields.
+   * This method takes in an object and returns the summed Euclidean distance over the relevant
+   * fields.
    *
    * @param target : target Object we are comparing against
    * @return euclidean distance
    */
   @Override
   public double getEuclideanDistance(Object target)
-      throws IllegalAccessException {
+      throws IllegalAccessException, NoSuchFieldException {
 
     double sum = 0;
     for (Field field : target.getClass().getFields()) {
-      double difference = field.getInt(target) - field.getInt(this.getVal());
+      String fieldName = field.getName();
+      Field valField = this.getVal().getClass().getField(fieldName);
+      double difference = field.getInt(target) - valField.getInt(this.getVal());
       sum += Math.pow(difference, 2);
     }
-    return sum;
+    return Math.sqrt(sum);
   }
 
   /**
@@ -83,8 +85,9 @@ public final class KDNode implements Node {
       throws IllegalAccessException,
       NoSuchFieldException {
 
-    Field field = this.getVal().getClass().getField(fieldName);
-    return Math.abs(field.getInt(this.getVal()) - field.getInt(target));
+    Field valField = this.getVal().getClass().getField(fieldName);
+    Field targetField = target.getClass().getField(fieldName);
+    return Math.abs(valField.getInt(this.getVal()) - targetField.getInt(target));
   }
 
   /**

@@ -229,7 +229,7 @@ final class KDTree {
    * @return position in list
    */
   private int getNodePosition(Object target, List<Node> nearestNeighbors, Node node)
-      throws IllegalAccessException {
+      throws IllegalAccessException, NoSuchFieldException {
     for (int i = 0; i < nearestNeighbors.size(); i++) {
       Node furthestNode = nearestNeighbors.get(i);
       if (furthestNode.getEuclideanDistance(target)
