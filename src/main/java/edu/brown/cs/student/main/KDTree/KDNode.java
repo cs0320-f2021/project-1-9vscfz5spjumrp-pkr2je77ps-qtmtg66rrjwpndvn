@@ -1,11 +1,6 @@
 package edu.brown.cs.student.main.KDTree;
 
-import edu.brown.cs.student.main.ORM.ClassInfoUtil;
-import edu.brown.cs.student.main.ORM.FieldInfo;
-
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.lang.reflect.Field;
 
 public final class KDNode implements Node {
   private Node left;
@@ -58,25 +53,19 @@ public final class KDNode implements Node {
   }
 
   /**
-   * This method takes in an object and the properties we'd like to compare our Node to. This method
-   * returns the summed Euclidian distance over the number of provided indices.
+   * This method takes in an object and a mapping of. This method
+   * returns the summed Euclidean distance over the relevant fields.
    *
-   * @param target          : target Object we are comparing against
-   * @param propertyIndices : list of indices for properties we want to index into
+   * @param target : target Object we are comparing against
    * @return euclidean distance
    */
   @Override
-  public double getEuclideanDistance(Object target, List<Integer> propertyIndices)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-
-    // get all the field information from the class
-    List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
-    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
+  public double getEuclideanDistance(Object target)
+      throws IllegalAccessException {
 
     double sum = 0;
-    for (int index : propertyIndices) {
-      double difference = (Integer) targetFields.get(index).readMethod.invoke(target)
-          - (Integer) nodeFields.get(index).readMethod.invoke(val);
+    for (Field field : target.getClass().getFields()) {
+      double difference = field.getInt(target) - field.getInt(this.getVal());
       sum += Math.pow(difference, 2);
     }
     return sum;
@@ -86,32 +75,29 @@ public final class KDNode implements Node {
    * This method returns the straight-line distance between a Node and its target on the relevant
    * axis.
    *
-   * @param target        : target Object we are comparing against
-   * @param propertyIndex : index for property we want to index into
+   * @param target : target Object we are comparing against
    * @return axis distance
    */
   @Override
-  public double getAxisDistance(Object target, int propertyIndex)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-    // get all the field information from the class
-    List<FieldInfo> targetFields = ClassInfoUtil.populateFieldInfo(target.getClass());
-    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
+  public double getAxisDistance(Object target, String fieldName)
+      throws IllegalAccessException,
+      NoSuchFieldException {
 
-    return (Integer) targetFields.get(propertyIndex).readMethod.invoke(target)
-        - (Integer) nodeFields.get(propertyIndex).readMethod.invoke(val);
+    Field field = this.getVal().getClass().getField(fieldName);
+    return Math.abs(field.getInt(this.getVal()) - field.getInt(target));
   }
 
   /**
    * This getter method returns the coordinate of a Node, as specified by the property index.
    *
-   * @param propertyIndex : index for property we want to index into
    * @return coordinate
    */
   @Override
-  public int getCoordinate(int propertyIndex)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException {
-    List<FieldInfo> nodeFields = ClassInfoUtil.populateFieldInfo(val.getClass());
-    return (Integer) nodeFields.get(propertyIndex).readMethod.invoke(val);
+  public int getCoordinate(String fieldName)
+      throws IllegalAccessException, NoSuchFieldException {
+
+    Field field = this.getVal().getClass().getField(fieldName);
+    return field.getInt(this.getVal());
   }
 
   /**

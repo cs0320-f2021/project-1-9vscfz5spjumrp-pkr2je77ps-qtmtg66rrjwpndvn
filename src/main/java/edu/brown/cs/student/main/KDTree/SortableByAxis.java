@@ -3,7 +3,8 @@ package edu.brown.cs.student.main.KDTree;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * The SortableByAxis interface allows us to wrap objects and sort them by their axis.
+ * The SortableByAxis interface allows us to wrap objects and sort them by their axis and
+ * corresponding field.
  *
  * @param <T>
  */
@@ -20,6 +21,18 @@ interface SortableByAxis<T extends Comparable<T>> extends Comparable<SortableByA
    * Sets the axis.
    */
   void setAxis(int newAxis);
+
+  /**
+   * Gets the field name.
+   *
+   * @return field name
+   */
+  String getFieldName();
+
+  /**
+   * Sets the field name.
+   */
+  void setFieldName(String newFieldName);
 
   /**
    * Gets the underlying Object.

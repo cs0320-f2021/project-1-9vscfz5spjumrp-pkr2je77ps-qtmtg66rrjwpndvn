@@ -1,9 +1,5 @@
 package edu.brown.cs.student.main.KDTree;
 
-import java.beans.IntrospectionException;
-import java.lang.reflect.InvocationTargetException;
-import java.util.List;
-
 /**
  * The Node interface provides the API that allows us to create tree-like structures.
  */
@@ -48,34 +44,31 @@ interface Node {
   void setLeft(Node leftChild);
 
   /**
-   * Get the Euclidian distance from a Node to it's target object, using the properties as
-   * specified by propertyIndices.
+   * Get the Euclidean distance from a Node to its target object.
    *
-   * @param target          : object that we are comparing against.
-   * @param propertyIndices : Node indices we are comparing on.
+   * @param target : object that we are comparing against.
    * @return euclidean distance
    */
-  double getEuclideanDistance(Object target, List<Integer> propertyIndices)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+  double getEuclideanDistance(Object target) throws IllegalAccessException;
 
   /**
-   * Gets the straight line distance between a Node and it's target on a given axis.
+   * Gets the straight line distance between a Node and its target on a given axis.
    *
-   * @param target        : object that we are comparing against.
-   * @param propertyIndex : Node index we are comparing on.
+   * @param target     : object that we are comparing against.
+   * @param fieldName: name of field we want to access
    * @return axis distance
    */
-  double getAxisDistance(Object target, int propertyIndex)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+  double getAxisDistance(Object target, String fieldName)
+      throws IllegalAccessException, NoSuchFieldException;
 
   /**
-   * Get a Node's coordinate given the propertyIndex we're searching for.
+   * Get a Node's coordinate given a field.
    *
-   * @param propertyIndex : which coordinate we want to access.
+   * @param fieldName: name of field we want to access
    * @return coordinate
    */
-  int getCoordinate(int propertyIndex)
-      throws IntrospectionException, InvocationTargetException, IllegalAccessException;
+  int getCoordinate(String fieldName)
+      throws IllegalAccessException, NoSuchFieldException;
 
 
 }
