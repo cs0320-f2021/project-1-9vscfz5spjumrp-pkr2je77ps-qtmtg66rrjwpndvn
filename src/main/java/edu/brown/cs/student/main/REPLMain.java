@@ -153,28 +153,6 @@ public final class REPLMain {
                 System.exit(1);
               }
               break;
-            case "insert":
-              if (manager == null) {
-                System.out.println("ERROR: database file was not set.");
-                break;
-              }
-              Users user = new Users();
-              user.setAge("10");
-              user.setUser_id("5");
-              user.setBody_type("athletic");
-              user.setHeight("short");
-              user.setBust_size("blah");
-              user.setWeight("blah");
-              user.setHoroscope("gemini");
-              manager.insert(user);
-              break;
-//            case "update":
-//              if (manager == null) {
-//                System.out.println("ERROR: database file was not set.");
-//                break;
-//              }
-//              manager.update(user, "horoscope", "aries");
-//              break;
             default:
               System.out.println("ERROR: Invalid command.");
           }
