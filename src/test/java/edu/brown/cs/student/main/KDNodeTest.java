@@ -3,37 +3,12 @@ package edu.brown.cs.student.main;
 import edu.brown.cs.student.main.KDTree.KDNode;
 import static org.junit.Assert.*;
 import org.junit.Test;
+import edu.brown.cs.student.main.KDDummyClasses.ThreeDimTestObject;
+import edu.brown.cs.student.main.KDDummyClasses.FourDimTestObject;
 
 public class KDNodeTest {
 
   public static final double EPSILON = 0.000001d;
-
-  public class ThreeDimTestObject {
-    public int one;
-    public int two;
-    public int three;
-
-    public ThreeDimTestObject(int one, int two, int three) {
-      this.one = one;
-      this.two = two;
-      this.three = three;
-    }
-  }
-
-  public class FourDimTestObject {
-    public int one;
-    public int two;
-    public int three;
-    public int four;
-
-
-    public FourDimTestObject(int one, int two, int three, int four) {
-      this.one = one;
-      this.two = two;
-      this.three = three;
-      this.four = four;
-    }
-  }
 
   @Test
   public void testGetEuclideanDistanceThreeDim() throws IllegalAccessException,

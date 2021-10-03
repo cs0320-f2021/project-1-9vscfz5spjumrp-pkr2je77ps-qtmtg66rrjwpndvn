@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * KDTree is a data structure that can be thought of a BST for n different axes to sort on.
  */
-final class KDTree {
+public final class KDTree {
 
   private final Node root;
   private final Map<Integer, String> axisToFieldMap;
@@ -24,7 +24,7 @@ final class KDTree {
    * @param vals       : collection of objects
    * @param dimensions : how many axes we want our KD-Tree to sort on
    */
-  <T extends Comparable<T>> KDTree(Collection<T> vals, int dimensions, List<String> fields) {
+  public <T extends Comparable<T>> KDTree(Collection<T> vals, int dimensions, List<String> fields) {
     //Check valid input
     if (vals == null) {
       throw new IllegalArgumentException("The collection of values that you provide to the KDTree"
@@ -64,6 +64,7 @@ final class KDTree {
     //set the root's children. This calls kDTreeBuilder, which will recursively build the tree.
     root.setLeft(kDTreeBuilder(values.subList(0, median), 1, dimensions));
     root.setRight(kDTreeBuilder(values.subList(median, vals.size()), 1, dimensions));
+    int a = 0;
   }
 
   /**
@@ -99,12 +100,16 @@ final class KDTree {
 
     Collections.sort(vals);
 
+
     //get the middle element
     int median = vals.size() / 2;
     SortableByAxis<T> val = vals.get(median);
 
     //create a node out of that middle element
     Node node = new KDNode(val, depth);
+    if (vals.size() <= 1) {
+      return node;
+    }
 
     //set children
     node.setLeft(kDTreeBuilder(vals.subList(0, median), depth + 1, dimensions));
@@ -256,6 +261,13 @@ final class KDTree {
     return null;
   }
 
+  /**
+   * gets the root. Used for testing purposes.
+   * @return root.
+   */
+  public Node getRoot() {
+    return root;
+  }
 }
 
 
