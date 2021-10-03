@@ -18,7 +18,7 @@ public class DataManagerTest {
     DataManager manager = new DataManager("data/project-1/emptyEditable.sqlite3");
     Users user = new Users();
     user.setAge("10");
-    user.setUser_id("111");
+    user.setUser_id("1");
     user.setBody_type("athletic");
     user.setHeight("short");
     user.setBust_size("blah");
@@ -27,7 +27,7 @@ public class DataManagerTest {
     manager.delete(user);
     manager.insert(user);
 
-    Users db_user = (Users) manager.select("user_id = ?", "111", Users.class).get(0);
+    Users db_user = (Users) manager.select("user_id = ?", "1", Users.class).get(0);
     assertEquals(user.getUser_id(), db_user.getUser_id());
     assertEquals(user.getAge(), db_user.getAge());
     assertEquals(user.getBody_type(), db_user.getBody_type());
@@ -38,40 +38,32 @@ public class DataManagerTest {
   }
 
   @Test
-  public void testInsertEmpty() throws Exception {
-    DataManager manager = new DataManager("data/project-1/emptyEditable.sqlite3");
-    Users user = new Users();
-    manager.insert(user);
-
-    List<Object> db_user = manager.select("user_id = ?", "111", Users.class);
-    assertTrue(db_user.isEmpty());
-  }
-
-  @Test
   public void testInsertMultiple() throws Exception {
     DataManager manager = new DataManager("data/project-1/emptyEditable.sqlite3");
     Users user = new Users();
     user.setAge("10");
-    user.setUser_id("111");
+    user.setUser_id("2");
     user.setBody_type("athletic");
     user.setHeight("short");
     user.setBust_size("blah");
     user.setWeight("blah");
     user.setHoroscope("gemini");
+    manager.delete(user);
     manager.insert(user);
 
     Users user2 = new Users();
     user2.setAge("11");
-    user2.setUser_id("222");
+    user2.setUser_id("3");
     user2.setBody_type("not athletic");
     user2.setHeight("tall");
     user2.setBust_size("blah");
     user2.setWeight("blah");
     user2.setHoroscope("capricorn");
+    manager.delete(user2);
     manager.insert(user2);
 
-    Users db_user = (Users) manager.select("user_id = ?", "111", Users.class).get(0);
-    Users db_user2 = (Users) manager.select("user_id = ?", "222", Users.class).get(0);
+    Users db_user = (Users) manager.select("user_id = ?", "2", Users.class).get(0);
+    Users db_user2 = (Users) manager.select("user_id = ?", "3", Users.class).get(0);
     assertEquals(user.getUser_id(), db_user.getUser_id());
     assertEquals(user.getAge(), db_user.getAge());
     assertEquals(user.getBody_type(), db_user.getBody_type());
@@ -89,11 +81,11 @@ public class DataManagerTest {
   }
 
   @Test
-  public void testInsertDelete() throws Exception {
+  public void testDelete() throws Exception {
     DataManager manager = new DataManager("data/project-1/emptyEditable.sqlite3");
     Users user = new Users();
     user.setAge("10");
-    user.setUser_id("111");
+    user.setUser_id("4");
     user.setBody_type("athletic");
     user.setHeight("short");
     user.setBust_size("blah");
@@ -102,7 +94,27 @@ public class DataManagerTest {
     manager.insert(user);
     manager.delete(user);
 
-    List<Object> db_user = manager.select("user_id = ?", "111", Users.class);
+    List<Object> db_user = manager.select("user_id = ?", "4", Users.class);
     assertTrue(db_user.isEmpty());
+  }
+
+  @Test
+  public void testUpdate() throws Exception {
+    DataManager manager = new DataManager("data/project-1/emptyEditable.sqlite3");
+    Users user = new Users();
+    user.setAge("10");
+    user.setUser_id("5");
+    user.setBody_type("athletic");
+    user.setHeight("short");
+    user.setBust_size("blah");
+    user.setWeight("blah");
+    user.setHoroscope("gemini");
+    manager.delete(user);
+    manager.insert(user);
+    manager.update(user, "horoscope", "aries");
+
+    Users db_user = (Users) manager.select("user_id = ?", "5", Users.class).get(0);
+
+    assertEquals("aries", db_user.getHoroscope());
   }
 }
