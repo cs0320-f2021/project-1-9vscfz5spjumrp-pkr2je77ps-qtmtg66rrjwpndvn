@@ -16,6 +16,7 @@ public final class KDTree {
   private final Node root;
   private final Map<Integer, String> axisToFieldMap;
   private final int numAxes;
+  private int size;
 
   /**
    * the KDTree class stores a KD-Tree starting with a root node. It needs to know how many
@@ -60,10 +61,11 @@ public final class KDTree {
 
     //set the middle element as the root.
     root = new KDNode(val, 0);
+    size++;
 
     //set the root's children. This calls kDTreeBuilder, which will recursively build the tree.
     root.setLeft(kDTreeBuilder(values.subList(0, median), 1, dimensions));
-    root.setRight(kDTreeBuilder(values.subList(median, vals.size()), 1, dimensions));
+    root.setRight(kDTreeBuilder(values.subList(median + 1, values.size()), 1, dimensions));
     int a = 0;
   }
 
@@ -107,13 +109,16 @@ public final class KDTree {
 
     //create a node out of that middle element
     Node node = new KDNode(val, depth);
-    if (vals.size() <= 1) {
+    size++;
+    if (vals.size() == 1) {
       return node;
     }
 
-    //set children
+
+    //TODO: this isn't going properly
+
     node.setLeft(kDTreeBuilder(vals.subList(0, median), depth + 1, dimensions));
-    node.setRight(kDTreeBuilder(vals.subList(median, vals.size()), depth + 1, dimensions));
+    node.setRight(kDTreeBuilder(vals.subList(median + 1, vals.size()), depth + 1, dimensions));
     return node;
   }
 
