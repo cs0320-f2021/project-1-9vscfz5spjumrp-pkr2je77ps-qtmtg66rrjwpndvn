@@ -1,0 +1,11 @@
+INPUT
+users data/runwaySMALL.sqlite3
+similar 5 190 70 21
+OUTPUT
+Loaded 15 users from data/runwaySMALL.sqlite3
+499943
+151944
+391778
+829124
+420272
+END
