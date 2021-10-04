@@ -9,10 +9,22 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The DataManager class establishes a connection to the sql database
+ * via the ORM and contains methods to interact with it
+ * (insert, select, delete)
+ */
 public class DataManager {
   // connection shared across all DataManager instances
   private static Connection conn;
 
+  /**
+   * Takes the filename of the database file and establishes a
+   * connection to it
+   * @param databaseFile the database filename
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   public DataManager(String databaseFile) throws SQLException, ClassNotFoundException {
     // create connection with database file path
     Class.forName("org.sqlite.JDBC");
@@ -20,6 +32,12 @@ public class DataManager {
     conn = DriverManager.getConnection(urlToDB);
   }
 
+  /**
+   * Inserts an object into the database table with the same name
+   * as the class of the object.
+   * @param obj an object to insert into the database
+   * @throws Exception
+   */
   public void insert(Object obj) throws Exception {
     // get class name for objectClass (same as table name)
     String className = obj.getClass().getSimpleName();
@@ -66,6 +84,15 @@ public class DataManager {
     prep.close();
   }
 
+  /**
+   * Select rows from the sql database and return all matching rows in
+   * object form.
+   * @param where the condition to select rows by
+   * @param value the value of the condition (column) to select by
+   * @param objectClass the class of objects to return
+   * @return a list of objects representing SQL rows
+   * @throws Exception
+   */
   public List<Object> select(String where, String value, Class objectClass)
       throws Exception {
     // make list of objects to return
@@ -111,6 +138,11 @@ public class DataManager {
     return returnValues;
   }
 
+  /**
+   * Delete an object (row) from the table
+   * @param obj an object representing a sql row
+   * @throws Exception
+   */
   public void delete(Object obj) throws Exception {
     // get class name for objectClass (same as table name)
     String className = obj.getClass().getSimpleName();
@@ -147,6 +179,13 @@ public class DataManager {
     prep.close();
   }
 
+  /**
+   * Update the value of a field (column) of a specific row in the database
+   * @param obj the object whose field needs updating
+   * @param field the field to update
+   * @param value the value to update the chosen field with
+   * @throws Exception
+   */
   public void update(Object obj, String field, String value) throws Exception {
     // get class name for objectClass (same as table name)
     String className = obj.getClass().getSimpleName();
