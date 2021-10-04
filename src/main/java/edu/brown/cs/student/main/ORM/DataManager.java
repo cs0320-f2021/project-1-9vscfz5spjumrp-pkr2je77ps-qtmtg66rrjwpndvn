@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main;
+package edu.brown.cs.student.main.ORM;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,14 +10,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DataManager {
-  // DataManager's connection
-  private Connection conn;
+  // connection shared across all DataManager instances
+  private static Connection conn;
 
   public DataManager(String databaseFile) throws SQLException, ClassNotFoundException {
     // create connection with database file path
     Class.forName("org.sqlite.JDBC");
     String urlToDB = "jdbc:sqlite:" + databaseFile;
-    this.conn = DriverManager.getConnection(urlToDB);
+    conn = DriverManager.getConnection(urlToDB);
   }
 
   public void insert(Object obj) throws Exception {
