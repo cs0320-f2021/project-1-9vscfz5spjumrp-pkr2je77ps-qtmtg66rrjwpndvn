@@ -55,7 +55,7 @@ public class KDSortableByAxis<T extends Comparable<T>> implements SortableByAxis
    *
    * @return underlying object
    */
-  public final Object getVal() {
+  public Object getVal() {
     return val;
   }
 
