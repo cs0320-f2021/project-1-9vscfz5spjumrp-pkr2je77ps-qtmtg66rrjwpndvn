@@ -7,11 +7,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
 
+import edu.brown.cs.student.main.KDTree.KDTree;
+import edu.brown.cs.student.main.KDTree.UserKDObject;
 import edu.brown.cs.student.main.ORM.DataManager;
 import edu.brown.cs.student.main.ORM.Users;
 import freemarker.template.Configuration;
@@ -33,6 +36,7 @@ public final class REPLMain {
 
   // use port 4567 by default when running server
   private static final int DEFAULT_PORT = 4567;
+  private Class Users;
 
 
   /**
@@ -79,6 +83,14 @@ public final class REPLMain {
         System.exit(1);
       }
     }
+
+
+    //Instantiate KDTree. Will create later
+    KDTree kdTree = null;
+    List<String> fields = new ArrayList<>();
+    fields.add("weight");
+    fields.add("height");
+    fields.add("age");
 
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
       // create new StarHandler
@@ -153,20 +165,64 @@ public final class REPLMain {
                 System.exit(1);
               }
               break;
+            case "users":
+              //TODO: get these after loading into database
+              //create a KDTree if necessary
+              if (kdTree == null) {
+                assert manager != null;
+                List<Object> objects = manager.select("", "", Users);
+                kdTree = new KDTree(objects, 3, fields);
+              }
+              break;
+            case "similar":
+
+              if (arguments.length != 3 && arguments.length != 5) {
+                System.out.println(
+                    "ERROR: Invalid command. To run the 'similar' command, your input must be either: "
+                        + "(1) similar <k> <some_user_id> or (2) "
+                        + "similar <k> <weight in lbs> <height in inches> <age in years>");
+              }
+              int k = Integer.parseInt(arguments[1]);
+              UserKDObject target;
+              if (arguments.length == 5) {
+                int weight = Integer.parseInt(arguments[2]);
+                int height = Integer.parseInt(arguments[3]);
+                int age = Integer.parseInt(arguments[4]);
+                target = new UserKDObject(weight, height, age);
+              } else {
+                List<Object> list = manager.select("", "", Users);
+                Users user = new Users();
+                int weight = Integer.parseInt(user.getWeight());
+                int height = Integer.parseInt(user.getHeight());
+                int age = Integer.parseInt(user.getAge());
+                target = new UserKDObject(weight, height, age);
+              }
+
+
+
+
+
+              List<Object> kNearestNeighbors = kdTree.kNearestNeighbors(target, k);
+              break;
+            case "classify":
+              break;
             default:
               System.out.println("ERROR: Invalid command.");
           }
-        } catch (Exception e) {
+      } catch(Exception e){
 //          e.printStackTrace();
-          System.out.println("ERROR: We couldn't process your input");
-        }
+        System.out.println("ERROR: We couldn't process your input");
       }
-    } catch (Exception e) {
-//      e.printStackTrace();
-      System.out.println("ERROR: Invalid input for REPL");
     }
+  } catch(
+  Exception e)
 
+  {
+//      e.printStackTrace();
+    System.out.println("ERROR: Invalid input for REPL");
   }
+
+}
 
 
   private static FreeMarkerEngine createEngine() {
@@ -201,40 +257,40 @@ public final class REPLMain {
     Spark.get("/", new MainHandler(), freeMarker);
   }
 
-  /**
-   * Display an error page when an exception occurs in the server.
-   */
-  private static class ExceptionPrinter implements ExceptionHandler<Exception> {
-    @Override
-    public void handle(Exception e, Request req, Response res) {
-      // status 500 generally means there was an internal server error
-      res.status(500);
+/**
+ * Display an error page when an exception occurs in the server.
+ */
+private static class ExceptionPrinter implements ExceptionHandler<Exception> {
+  @Override
+  public void handle(Exception e, Request req, Response res) {
+    // status 500 generally means there was an internal server error
+    res.status(500);
 
-      // write stack trace to GUI
-      StringWriter stacktrace = new StringWriter();
-      try (PrintWriter pw = new PrintWriter(stacktrace)) {
-        pw.println("<pre>");
-        e.printStackTrace(pw);
-        pw.println("</pre>");
-      }
-      res.body(stacktrace.toString());
+    // write stack trace to GUI
+    StringWriter stacktrace = new StringWriter();
+    try (PrintWriter pw = new PrintWriter(stacktrace)) {
+      pw.println("<pre>");
+      e.printStackTrace(pw);
+      pw.println("</pre>");
     }
+    res.body(stacktrace.toString());
   }
+}
 
-  /**
-   * A handler to serve the site's main page.
-   *
-   * @return ModelAndView to render.
-   * (main.ftl).
-   */
-  private static class MainHandler implements TemplateViewRoute {
-    @Override
-    public ModelAndView handle(Request req, Response res) {
-      // this is a map of variables that are used in the FreeMarker template
-      Map<String, Object> variables = ImmutableMap.of("title",
-          "Go go GUI");
+/**
+ * A handler to serve the site's main page.
+ *
+ * @return ModelAndView to render.
+ * (main.ftl).
+ */
+private static class MainHandler implements TemplateViewRoute {
+  @Override
+  public ModelAndView handle(Request req, Response res) {
+    // this is a map of variables that are used in the FreeMarker template
+    Map<String, Object> variables = ImmutableMap.of("title",
+        "Go go GUI");
 
-      return new ModelAndView(variables, "main.ftl");
-    }
+    return new ModelAndView(variables, "main.ftl");
   }
+}
 }

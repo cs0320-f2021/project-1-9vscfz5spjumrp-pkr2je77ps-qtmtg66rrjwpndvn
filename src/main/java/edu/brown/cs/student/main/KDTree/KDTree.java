@@ -25,7 +25,7 @@ public final class KDTree {
    * @param vals       : collection of objects
    * @param dimensions : how many axes we want our KD-Tree to sort on
    */
-  public <T extends Comparable<T>> KDTree(Collection<T> vals, int dimensions, List<String> fields) {
+  public <T extends Comparable<T>> KDTree(List<Object> vals, int dimensions, List<String> fields) {
     //Check valid input
     if (vals == null) {
       throw new IllegalArgumentException("The collection of values that you provide to the KDTree"
@@ -47,7 +47,7 @@ public final class KDTree {
     //Convert collections of objects to a list of KDSortableByAxis objects, so that we can compare
     //them by axis & field later.
     List<SortableByAxis<T>> values = new ArrayList<>();
-    for (T val : vals) {
+    for (Object val : vals) {
       SortableByAxis<T> s = new KDSortableByAxis<>(val, axisToFieldMap.get(0), 0);
       values.add(s);
     }
