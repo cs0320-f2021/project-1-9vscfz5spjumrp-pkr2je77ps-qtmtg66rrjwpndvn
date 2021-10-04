@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * The DataManager class establishes a connection to the sql database
  * via the ORM and contains methods to interact with it
- * (insert, select, delete)
+ * (insert, select, delete, update, sql)
  */
 public class DataManager {
   // connection shared across all DataManager instances
@@ -224,6 +224,12 @@ public class DataManager {
     prep.close();
   }
 
+  /**
+   * Execute a sql command on the database via the ORM
+   * @param command a sql command to execute
+   * @return a ResultSet response from the database
+   * @throws Exception
+   */
   public ResultSet sql(String command) throws Exception {
     String[] commandSplit = command.split(" ");
 
@@ -244,13 +250,18 @@ public class DataManager {
     }
   }
 
+  /**
+   * Get the value of a particular field in a list of FieldInfo
+   * @param fieldInfos a list of fields
+   * @param fieldName the name of the field we'd like to extract a value from
+   * @return the FieldInfo of the field searched for
+   */
   private FieldInfo getFieldInfo(List<FieldInfo> fieldInfos, String fieldName) {
     for (FieldInfo info : fieldInfos) {
       if (info.name.equals(fieldName)) {
         return info;
       }
     }
-
     return null;
   }
 }
