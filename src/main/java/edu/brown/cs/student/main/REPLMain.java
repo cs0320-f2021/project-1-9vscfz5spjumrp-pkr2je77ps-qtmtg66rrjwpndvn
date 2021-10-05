@@ -199,9 +199,6 @@ public final class REPLMain {
               }
 
 
-
-
-
               List<Object> kNearestNeighbors = kdTree.kNearestNeighbors(target, k);
               break;
             case "classify":
@@ -209,20 +206,18 @@ public final class REPLMain {
             default:
               System.out.println("ERROR: Invalid command.");
           }
-      } catch(Exception e){
+        } catch (Exception e) {
 //          e.printStackTrace();
-        System.out.println("ERROR: We couldn't process your input");
+          System.out.println("ERROR: We couldn't process your input");
+        }
       }
-    }
-  } catch(
-  Exception e)
-
-  {
+    } catch (
+        Exception e) {
 //      e.printStackTrace();
-    System.out.println("ERROR: Invalid input for REPL");
-  }
+      System.out.println("ERROR: Invalid input for REPL");
+    }
 
-}
+  }
 
 
   private static FreeMarkerEngine createEngine() {
@@ -257,40 +252,40 @@ public final class REPLMain {
     Spark.get("/", new MainHandler(), freeMarker);
   }
 
-/**
- * Display an error page when an exception occurs in the server.
- */
-private static class ExceptionPrinter implements ExceptionHandler<Exception> {
-  @Override
-  public void handle(Exception e, Request req, Response res) {
-    // status 500 generally means there was an internal server error
-    res.status(500);
+  /**
+   * Display an error page when an exception occurs in the server.
+   */
+  private static class ExceptionPrinter implements ExceptionHandler<Exception> {
+    @Override
+    public void handle(Exception e, Request req, Response res) {
+      // status 500 generally means there was an internal server error
+      res.status(500);
 
-    // write stack trace to GUI
-    StringWriter stacktrace = new StringWriter();
-    try (PrintWriter pw = new PrintWriter(stacktrace)) {
-      pw.println("<pre>");
-      e.printStackTrace(pw);
-      pw.println("</pre>");
+      // write stack trace to GUI
+      StringWriter stacktrace = new StringWriter();
+      try (PrintWriter pw = new PrintWriter(stacktrace)) {
+        pw.println("<pre>");
+        e.printStackTrace(pw);
+        pw.println("</pre>");
+      }
+      res.body(stacktrace.toString());
     }
-    res.body(stacktrace.toString());
   }
-}
 
-/**
- * A handler to serve the site's main page.
- *
- * @return ModelAndView to render.
- * (main.ftl).
- */
-private static class MainHandler implements TemplateViewRoute {
-  @Override
-  public ModelAndView handle(Request req, Response res) {
-    // this is a map of variables that are used in the FreeMarker template
-    Map<String, Object> variables = ImmutableMap.of("title",
-        "Go go GUI");
+  /**
+   * A handler to serve the site's main page.
+   *
+   * @return ModelAndView to render.
+   * (main.ftl).
+   */
+  private static class MainHandler implements TemplateViewRoute {
+    @Override
+    public ModelAndView handle(Request req, Response res) {
+      // this is a map of variables that are used in the FreeMarker template
+      Map<String, Object> variables = ImmutableMap.of("title",
+          "Go go GUI");
 
-    return new ModelAndView(variables, "main.ftl");
+      return new ModelAndView(variables, "main.ftl");
+    }
   }
-}
 }

@@ -251,6 +251,7 @@ public final class KDTree {
    * @param propertyIndex : index for property we care about
    * @return classification
    */
+  //TODO: implement
   private Object classify(Object target, int k, int propertyIndex)
       throws IllegalAccessException, NoSuchFieldException {
     List<Integer> properties = new ArrayList<>(List.of(propertyIndex));
