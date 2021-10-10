@@ -3,6 +3,14 @@ package edu.brown.cs.student.main;
 import edu.brown.cs.student.main.ORM.DataManager;
 import edu.brown.cs.student.main.ORM.Users;
 
+/**
+ * Parker's Comments:
+ *
+ * (1) Code Problems:
+ * Our REPL
+ * (2) User Testing:
+ */
+
 public final class Main {
   public static void main(String[] args) throws Exception {
     DataManager manager = new DataManager("C:\\Users\\alyss\\CS32\\onboarding-9VsCfZ5sPjUMRp\\data\\project-1\\emptyEditable.sqlite3");
