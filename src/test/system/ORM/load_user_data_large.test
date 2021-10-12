@@ -1,0 +1,5 @@
+INPUT
+users data/runwayBIG.sqlite3
+OUTPUT
+Loaded 146381 users from data/runwayBIG.sqlite3
+END

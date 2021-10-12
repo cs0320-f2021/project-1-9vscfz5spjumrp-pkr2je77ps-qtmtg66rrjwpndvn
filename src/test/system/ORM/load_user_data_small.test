@@ -1,0 +1,5 @@
+INPUT
+users data/runwaySMALL.sqlite3
+OUTPUT
+Loaded 15 users from data/runwaySMALL.sqlite3
+END

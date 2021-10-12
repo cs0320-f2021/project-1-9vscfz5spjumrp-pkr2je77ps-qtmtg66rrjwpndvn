@@ -25,7 +25,7 @@ public final class KDTree {
    * @param vals       : collection of objects
    * @param dimensions : how many axes we want our KD-Tree to sort on
    */
-  public <T extends Comparable<T>> KDTree(Collection<T> vals, int dimensions, List<String> fields) {
+  public <T extends Comparable<T>> KDTree(List<Object> vals, int dimensions, List<String> fields) {
     //Check valid input
     if (vals == null) {
       throw new IllegalArgumentException("The collection of values that you provide to the KDTree"
@@ -47,7 +47,7 @@ public final class KDTree {
     //Convert collections of objects to a list of KDSortableByAxis objects, so that we can compare
     //them by axis & field later.
     List<SortableByAxis<T>> values = new ArrayList<>();
-    for (T val : vals) {
+    for (Object val : vals) {
       SortableByAxis<T> s = new KDSortableByAxis<>(val, axisToFieldMap.get(0), 0);
       values.add(s);
     }
@@ -60,13 +60,12 @@ public final class KDTree {
     SortableByAxis<T> val = values.get(median);
 
     //set the middle element as the root.
-    root = new KDNode(val, 0);
+    root = new KDNode(val.getVal(), 0);
     size++;
 
     //set the root's children. This calls kDTreeBuilder, which will recursively build the tree.
     root.setLeft(kDTreeBuilder(values.subList(0, median), 1, dimensions));
     root.setRight(kDTreeBuilder(values.subList(median + 1, values.size()), 1, dimensions));
-    int a = 0;
   }
 
   /**
@@ -102,20 +101,13 @@ public final class KDTree {
 
     Collections.sort(vals);
 
-
     //get the middle element
     int median = vals.size() / 2;
     SortableByAxis<T> val = vals.get(median);
 
     //create a node out of that middle element
-    Node node = new KDNode(val, depth);
+    Node node = new KDNode(val.getVal(), depth);
     size++;
-    if (vals.size() == 1) {
-      return node;
-    }
-
-
-    //TODO: this isn't going properly
 
     node.setLeft(kDTreeBuilder(vals.subList(0, median), depth + 1, dimensions));
     node.setRight(kDTreeBuilder(vals.subList(median + 1, vals.size()), depth + 1, dimensions));
@@ -130,7 +122,7 @@ public final class KDTree {
    * @return k nearest neighbors
    */
   //TODO: need to worry about whether target IS our neighbor (just check ID)
-  private List<Object> kNearestNeighbors(Object target, int k)
+  public List<Object> kNearestNeighbors(Object target, int k)
       throws IllegalAccessException, NoSuchFieldException {
     //Create nearestNeighbors list and get nearest neighbors
     List<Node> nearestNeighbors = new ArrayList<>();
@@ -259,6 +251,7 @@ public final class KDTree {
    * @param propertyIndex : index for property we care about
    * @return classification
    */
+  //TODO: implement
   private Object classify(Object target, int k, int propertyIndex)
       throws IllegalAccessException, NoSuchFieldException {
     List<Integer> properties = new ArrayList<>(List.of(propertyIndex));
@@ -272,6 +265,14 @@ public final class KDTree {
    */
   public Node getRoot() {
     return root;
+  }
+
+  /**
+   * gets the size. Used for testing purposes.
+   * @return root.
+   */
+  public int size() {
+    return size;
   }
 }
 
