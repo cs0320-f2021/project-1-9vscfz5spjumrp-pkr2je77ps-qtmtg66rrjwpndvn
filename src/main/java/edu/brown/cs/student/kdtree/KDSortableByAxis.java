@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.KDTree;
+package edu.brown.cs.student.kdtree;
 
 import org.jetbrains.annotations.NotNull;
 import java.lang.reflect.Field;

@@ -1,7 +1,7 @@
 package edu.brown.cs.student.main;
 
-import edu.brown.cs.student.main.ORM.DataManager;
-import edu.brown.cs.student.main.ORM.Users;
+import edu.brown.cs.student.orm.DataManager;
+import edu.brown.cs.student.orm.Users;
 import org.junit.Test;
 
 import java.util.List;

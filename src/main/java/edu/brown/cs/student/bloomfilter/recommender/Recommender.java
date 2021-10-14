@@ -1,4 +1,4 @@
-package edu.brown.cs.student.recommender;
+package edu.brown.cs.student.bloomfilter.recommender;
 
 import java.util.List;
 

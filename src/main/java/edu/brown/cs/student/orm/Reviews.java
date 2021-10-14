@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.ORM;
+package edu.brown.cs.student.orm;
 
 public class Reviews {
   private int id;

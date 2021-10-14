@@ -1,6 +1,6 @@
 package edu.brown.cs.student.main;
 
-import edu.brown.cs.student.main.KDTree.KDNode;
+import edu.brown.cs.student.kdtree.KDNode;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import edu.brown.cs.student.main.KDDummyClasses.ThreeDimTestObject;

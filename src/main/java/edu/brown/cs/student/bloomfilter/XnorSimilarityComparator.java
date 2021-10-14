@@ -1,5 +1,6 @@
 package edu.brown.cs.student.bloomfilter;
 
+import edu.brown.cs.student.bloomfilter.BloomFilter;
 import java.io.Serializable;
 import java.util.BitSet;
 import java.util.Comparator;

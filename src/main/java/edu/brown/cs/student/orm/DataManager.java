@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.ORM;
+package edu.brown.cs.student.orm;
 
 import java.sql.Connection;
 import java.sql.DriverManager;

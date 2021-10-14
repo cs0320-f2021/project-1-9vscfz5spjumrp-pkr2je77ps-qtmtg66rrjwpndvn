@@ -1,4 +1,4 @@
-package edu.brown.cs.student.client;
+package edu.brown.cs.student.api.client;
 
 import java.net.URI;
 import java.net.http.HttpRequest;

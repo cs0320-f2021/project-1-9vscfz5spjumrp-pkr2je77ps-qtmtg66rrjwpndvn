@@ -12,11 +12,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-
-import edu.brown.cs.student.main.KDTree.KDTree;
-import edu.brown.cs.student.main.KDTree.UserKDObject;
-import edu.brown.cs.student.main.ORM.DataManager;
-import edu.brown.cs.student.main.ORM.Users;
+import edu.brown.cs.student.kdtree.KDTree;
+import edu.brown.cs.student.kdtree.UserKDObject;
+import edu.brown.cs.student.orm.DataManager;
+import edu.brown.cs.student.orm.Users;
+import edu.brown.cs.student.stars.Star;
+import edu.brown.cs.student.stars.StarHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;

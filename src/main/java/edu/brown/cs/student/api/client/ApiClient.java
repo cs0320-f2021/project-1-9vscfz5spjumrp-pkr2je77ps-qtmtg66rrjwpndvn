@@ -1,6 +1,6 @@
-package edu.brown.cs.student.client;
+package edu.brown.cs.student.api.client;
 
-import edu.brown.cs.student.main.ApiAggregator;
+import edu.brown.cs.student.api.ApiAggregator;
 
 import java.io.IOException;
 import java.net.http.HttpClient;

@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.KDTree;
+package edu.brown.cs.student.kdtree;
 
 /**
  * The Node interface provides the API that allows us to create tree-like structures.

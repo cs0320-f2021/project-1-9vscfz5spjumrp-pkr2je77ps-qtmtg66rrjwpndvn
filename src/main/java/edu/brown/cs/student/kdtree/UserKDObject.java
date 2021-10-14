@@ -1,4 +1,4 @@
-package edu.brown.cs.student.main.KDTree;
+package edu.brown.cs.student.kdtree;
 
 public class UserKDObject {
   public int weight;

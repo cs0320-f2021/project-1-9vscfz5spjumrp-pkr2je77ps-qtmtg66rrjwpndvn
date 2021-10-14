@@ -1,6 +1,6 @@
-package edu.brown.cs.student.client;
+package edu.brown.cs.student.api.client;
 
-import edu.brown.cs.student.core.FileParser;
+import edu.brown.cs.student.api.core.FileParser;
 
 /**
  * This simple class is for reading the API Key from your secret file (THAT SHOULD NOT BE PUSHED TO GIT).

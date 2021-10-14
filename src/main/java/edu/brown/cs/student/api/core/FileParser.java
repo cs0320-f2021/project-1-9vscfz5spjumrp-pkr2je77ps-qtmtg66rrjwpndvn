@@ -1,4 +1,4 @@
-package edu.brown.cs.student.core;
+package edu.brown.cs.student.api.core;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
