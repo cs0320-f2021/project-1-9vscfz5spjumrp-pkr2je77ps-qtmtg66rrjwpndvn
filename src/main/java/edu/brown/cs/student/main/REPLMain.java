@@ -197,8 +197,6 @@ public final class REPLMain {
                 int age = Integer.parseInt(user.getAge());
                 target = new UserKDObject(weight, height, age);
               }
-
-
               List<Object> kNearestNeighbors = kdTree.kNearestNeighbors(target, k);
               break;
             case "classify":

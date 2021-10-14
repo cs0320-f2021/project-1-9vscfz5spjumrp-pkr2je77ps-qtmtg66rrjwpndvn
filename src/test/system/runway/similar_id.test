@@ -1,0 +1,11 @@
+INPUT
+users data/project-1/justusersSMALL.json
+similar 5 151944
+OUTPUT
+Loaded 15 users from data/project-1/justusersSMALL.json
+829124
+391778
+420272
+533900
+909926
+END
