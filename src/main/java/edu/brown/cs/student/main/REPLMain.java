@@ -117,12 +117,19 @@ public final class REPLMain {
                         + "Your REPL input should follow the following format:"
                         + "recsys_rec <num_recs> <student_id>");
               }
+              //parse rest of args
               int num_recs = Integer.parseInt(arguments[1]);
               int student_id = Integer.parseInt(arguments[2]);
+              //get recs
+              List<Object> recs = recSys.genRecsForTeam(num_recs, student_id);
+              //TODO: create student class, replace Object below and print out id
+              //print recs to console
+              for (Object rec : recs) {
+                System.out.println(rec);
+              }
               break;
             default:
               System.out.println("ERROR: Invalid command.");
-
 //            case "add":
 //              // if first argument is "add," use mathbot to add the next 2 arguments
 //              double sum =
