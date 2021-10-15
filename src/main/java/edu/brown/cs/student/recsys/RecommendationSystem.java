@@ -56,7 +56,7 @@ public class RecommendationSystem {
   /**
    * User Story 3: generate recommendations for a particular student’s team
    */
-  public List<Object> genRecsForTeam(int numRecs, int studentId) {
+  public String genRecsForTeam(int numRecs, int studentId) {
     //get numeric recommendations
     //TODO: ask Alyssa how to get the student
     List<Object> students = null;
@@ -68,13 +68,13 @@ public class RecommendationSystem {
     }
     Object student = students.get(0);
     List<Object> numericRecommendations = kdTree.kNearestNeighbors(student, numRecs);
-
     //get categorical recommendations
 
     List<Object> categoricalRecommendations =
         bloomFilterRecommender.getTopKRecommendations((Item) student, numRecs);
-
-    return combineRecommendations(numRecs, numericRecommendations, categoricalRecommendations);
+    List<Object> recs =
+        combineRecommendations(numRecs, numericRecommendations, categoricalRecommendations);
+    return serializeRecs(recs);
   }
 
   private List<Object> combineRecommendations(int numRecs, List<Object> numericRecommendations,
@@ -92,6 +92,15 @@ public class RecommendationSystem {
       }
     }
     return recs;
+  }
+
+  private String serializeRecs(List<Object> recs) {
+    StringBuilder str = new StringBuilder();
+    //TODO: create student class, and then append their ID
+    for (Object rec : recs) {
+      str.append(rec.toString());
+    }
+    return str.toString();
   }
 
   /**
