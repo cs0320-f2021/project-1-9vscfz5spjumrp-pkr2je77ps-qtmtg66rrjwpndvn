@@ -122,11 +122,19 @@ public final class KDTree {
    * @return k nearest neighbors
    */
   //TODO: need to worry about whether target IS our neighbor (just check ID)
-  public List<Object> kNearestNeighbors(Object target, int k)
-      throws IllegalAccessException, NoSuchFieldException {
+  public List<Object> kNearestNeighbors(Object target, int k) {
     //Create nearestNeighbors list and get nearest neighbors
     List<Node> nearestNeighbors = new ArrayList<>();
-    nearestNeighbors = kNN(root, target, k, nearestNeighbors);
+
+    try {
+      nearestNeighbors = kNN(root, target, k, nearestNeighbors);
+    } catch (IllegalAccessException e) {
+      System.out.println("[Error: KDTree] kNearestNeighbors(): Your kNN method returned"
+          + " an IllegalAccessException.");
+    } catch (NoSuchFieldException e) {
+      System.out.println("[Error: KDTree] kNearestNeighbors(): Your kNN method returned"
+          + "a NoSuchFieldException.");
+    }
 
     //Convert nearestNeighbors from list of Nodes to list of Objects
     List<Object> nearestObjects = new ArrayList<>();

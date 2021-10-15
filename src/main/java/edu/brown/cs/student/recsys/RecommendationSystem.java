@@ -2,8 +2,12 @@ package edu.brown.cs.student.recsys;
 
 import edu.brown.cs.student.api.ApiAggregator;
 import edu.brown.cs.student.bloomfilter.BloomFilterRecommender;
+import edu.brown.cs.student.bloomfilter.recommender.Item;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.orm.DataManager;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -52,8 +56,42 @@ public class RecommendationSystem {
   /**
    * User Story 3: generate recommendations for a particular student’s team
    */
-  public List<Object> genRecsForTeam() {
-    return null;
+  public List<Object> genRecsForTeam(int numRecs, int studentId) {
+    //get numeric recommendations
+    //TODO: ask Alyssa how to get the student
+    List<Object> students = null;
+    try {
+      students = orm.select("", "", Object.class);
+    } catch (Exception e) {
+      System.out.println("[Error: RecommendationSystem] genRecsForTeam(): Your select method "
+          + "returned an Exception.");
+    }
+    Object student = students.get(0);
+    List<Object> numericRecommendations = kdTree.kNearestNeighbors(student, numRecs);
+
+    //get categorical recommendations
+
+    List<Object> categoricalRecommendations =
+        bloomFilterRecommender.getTopKRecommendations((Item) student, numRecs);
+
+    return combineRecommendations(numRecs, numericRecommendations, categoricalRecommendations);
+  }
+
+  private List<Object> combineRecommendations(int numRecs, List<Object> numericRecommendations,
+                                              List<Object> categoricalRecommendations) {
+    int n = 0;
+    int c = 0;
+    List<Object> recs = new ArrayList<>();
+    for (int i = 0; i < numRecs; i++) {
+      if (i % 2 == 0) {
+        recs.add(numericRecommendations.get(n));
+        n++;
+      } else {
+        recs.add(categoricalRecommendations.get(c));
+        c++;
+      }
+    }
+    return recs;
   }
 
   /**
