@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +17,10 @@ import edu.brown.cs.student.api.ApiAggregator;
 import edu.brown.cs.student.bloomfilter.BloomFilterRecommender;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.kdtree.UserKDObject;
+import edu.brown.cs.student.main.command.Command;
+import edu.brown.cs.student.main.command.RecSysGenGroupsCommand;
+import edu.brown.cs.student.main.command.RecSysLoadCommand;
+import edu.brown.cs.student.main.command.RecSysRecCommand;
 import edu.brown.cs.student.orm.DataManager;
 import edu.brown.cs.student.orm.Users;
 import edu.brown.cs.student.recsys.RecommendationSystem;
@@ -42,6 +47,8 @@ public final class REPLMain {
   private static final int DEFAULT_PORT = 4567;
   private Class Users;
 
+  protected final Map<String, Command> commandMap = new HashMap<>();
+
 
   /**
    * The initial method called when execution begins.
@@ -49,7 +56,15 @@ public final class REPLMain {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) {
-    new REPLMain(args).run();
+    REPLMain repl = new REPLMain(args);
+    repl.buildCommandMap();
+    repl.run();
+  }
+
+  protected void buildCommandMap() {
+    commandMap.put("recsys_load", new RecSysLoadCommand());
+    commandMap.put("recsys_rec", new RecSysRecCommand());
+    commandMap.put("recsys_gen_groups", new RecSysGenGroupsCommand());
   }
 
   private String[] args;
@@ -80,12 +95,7 @@ public final class REPLMain {
     DataManager manager = null;
     // support providing db file via cmd line argument --database=path/to/database
     if (options.has("database")) {
-      try {
-        manager = new DataManager(options.valueOf(databaseSpec));
-      } catch (SQLException | ClassNotFoundException e) {
-        System.err.println("SQLite error: " + e.getMessage());
-        System.exit(1);
-      }
+      RecommendationSystem.getInstance().setDataBaseName(options.valueOf(databaseSpec));
     }
 
 
@@ -99,7 +109,7 @@ public final class REPLMain {
     try (BufferedReader br = new BufferedReader(new InputStreamReader(System.in))) {
 
       //Using Proxy pattern to store components
-      RecommendationSystem recSys = new RecommendationSystem();
+      RecommendationSystem recSys = RecommendationSystem.getInstance();
 
       String input;
       while ((input = br.readLine()) != null) {
@@ -107,25 +117,26 @@ public final class REPLMain {
           input = input.trim();
           String[] arguments = input.split(" ");
 
+          commandMap.get(arguments[0]).execute(arguments);
 
-          switch (arguments[0]) {
-            case "recsys_rec":
-              //make sure that the input is actually valid
-              if (arguments.length != 3) {
-                System.out.println(
-                    "Error: Too many arguments provided to the 'recsys_rec' command."
-                        + "Your REPL input should follow the following format:"
-                        + "recsys_rec <num_recs> <student_id>");
-              }
-              //parse rest of args
-              int numRecs = Integer.parseInt(arguments[1]);
-              int studentId = Integer.parseInt(arguments[2]);
-              //get recs
-              String message = recSys.genRecsForTeam(numRecs, studentId);
-              System.out.println(message);
-              break;
-            default:
-              System.out.println("ERROR: Invalid command.");
+//          switch (arguments[0]) {
+//            case "recsys_rec":
+//              //make sure that the input is actually valid
+//              if (arguments.length != 3) {
+//                System.out.println(
+//                    "Error: Too many arguments provided to the 'recsys_rec' command."
+//                        + "Your REPL input should follow the following format:"
+//                        + "recsys_rec <num_recs> <student_id>");
+//              }
+//              //parse rest of args
+//              int numRecs = Integer.parseInt(arguments[1]);
+//              int studentId = Integer.parseInt(arguments[2]);
+//              //get recs
+//              String message = recSys.genRecsForTeam(numRecs, studentId);
+//              System.out.println(message);
+//              break;
+//            default:
+//              System.out.println("ERROR: Invalid command.");
 //            case "add":
 //              // if first argument is "add," use mathbot to add the next 2 arguments
 //              double sum =
@@ -222,7 +233,7 @@ public final class REPLMain {
 //              break;
 //            case "classify":
 //              break;
-          }
+//          }
         } catch (Exception e) {
 //          e.printStackTrace();
           System.out.println("ERROR: We couldn't process your input");

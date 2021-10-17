@@ -20,12 +20,15 @@ public class RecommendationSystem {
   private DataManager orm;
   private BloomFilterRecommender bloomFilterRecommender;
   private KDTree kdTree;
+  // make RecommendationSystem singleton
+  private static final RecommendationSystem recSys = new RecommendationSystem();
+  private String databaseName;
 
   /**
    * The constructor only instantiates the API, as we need user input to instantiate
    * the other three.
    */
-  public RecommendationSystem() {
+  private RecommendationSystem() {
     this.apiAggregator = new ApiAggregator();
     //Instantiate these when given info from REPL.
     this.orm = null;
@@ -33,12 +36,18 @@ public class RecommendationSystem {
     this.kdTree = null;
   }
 
+  public static RecommendationSystem getInstance() {
+    return recSys;
+  }
+
+  public void setDataBaseName(String databaseName) {
+    this.databaseName = databaseName;
+  }
+
   /**
    * User Story 2. This will be implemented by Alyssa and moved here later
-   *
-   * @param databaseFile
    */
-  public String loadData(String databaseFile) {
+  public String loadData() {
     //TODO: get how many students there are after loading data into ORM, KD-Tree,
     // and BloomFilter. Must instantiate all 3 objects
     int k = 0;
