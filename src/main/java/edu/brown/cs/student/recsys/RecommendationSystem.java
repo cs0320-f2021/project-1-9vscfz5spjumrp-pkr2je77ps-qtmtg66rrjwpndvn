@@ -13,6 +13,7 @@ import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.main.command.Command;
 import edu.brown.cs.student.orm.DataManager;
 import edu.brown.cs.student.orm.Users;
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -164,11 +165,6 @@ public class RecommendationSystem {
   }
 
   /**
-   *
-   * <p>
-   * >
-   */
-  /**
    * User Story 4: generate the set of best matched teams across the entire class
    *
    * @param teamSize - size of individual teams
@@ -182,34 +178,29 @@ public class RecommendationSystem {
    * >
    */
   public String genBestMatchedTeams(int teamSize) {
-    // list to store all students in dataset (returned from orm)
-    List<Object> AllStudents = null;
-
     // hashmap of student to their recs
     Map<Object, List<Object>> studentRecs = new HashMap<>();
     // hashmap of student to their team members (duplicate students stored...)
     // Map<Object, List<Object>> AllTeams = new HashMap<>();
 
     // list to store all teams
-    List<List<Object>> AllTeams = null;
+    List<List<Student>> AllTeams = new ArrayList<>();
 
     try {
-      // check if this selects all students, or if need to call custom query .sql("SELECT ...")
-      AllStudents = orm.select("", "", Object.class);
-
       //  if the total number of students is not divisible by teamSize
       //  return larger groups than desired in input teamSize
-      //  Why? Smaller teams might be overwhelmed by work
-      if (AllStudents.size() % teamSize != 0) {
+      //  Because smaller teams might be overwhelmed by the work
+      if (this.students.size() % teamSize != 0) {
         teamSize++;
       }
-      // generate recommendations for every student in the database
-      for (Object student : AllStudents) {
+      // generate recommendations for every student in the dataset
+      for (Student student : this.students) {
         // get numeric recommendations
-        List<Object> numericRecommendations = kdTree.kNearestNeighbors(student, AllStudents.size());
+        List<Object> numericRecommendations =
+            kdTree.kNearestNeighbors(student, this.students.size());
         // get categorical recommendations
         List<Object> categoricalRecommendations =
-            bloomFilterRecommender.getTopKRecommendations((Item) student, AllStudents.size());
+            bloomFilterRecommender.getTopKRecommendations((Item) student, this.students.size());
         // combine recommendations
         List<Object> AllRecsForStudent =
             combineRecommendations(teamSize, numericRecommendations, categoricalRecommendations);
@@ -218,38 +209,57 @@ public class RecommendationSystem {
         studentRecs.put(student, AllRecsForStudent);
       }
 
-      // loop through map and assign highest recommended students to this students team
+      // loop through map and assign highest recommended students to this students' team
       for (Map.Entry<Object, List<Object>> student : studentRecs.entrySet()) {
-        int numTeamMates = teamSize;
         List<Object> newTeam = new ArrayList();
-        for (List<Object> team : AllTeams) {
-          // if student already exists in another students team then move on to next rec
-          if (team.contains(student.getValue())) {
 
-          } else {
-            newTeam.add()
-            numTeamMates--;
+        // check if this student is already in another team
+        for (List<Student> team : AllTeams) {
+          // if student doesn't already exist in another team, add it as first member of newTeam
+          if (!team.contains(student.getKey())) {
+            newTeam.add(student.getKey());
           }
         }
 
+        int teamMembersAdded = teamSize;
+        // search for highest recommended teammates for this student
+        // looping over all recommendations for this student in the map<student : List<Students>>
+        for (Object rec : student.getValue()) {
+          // while team hasn't reached capacity
+          while (teamMembersAdded != 0) {
+            // check if this student is already in another team
+            for (List<Student> team : AllTeams) {
+              // if student isn't in another team, add it to newTeam
+              if (!team.contains((Student) rec)) {
+                newTeam.add((Student) rec);
+                teamMembersAdded--;
+              }
+            }
+          }
+        }
       }
-
-
     } catch (Exception e) {
-      System.out.println("[Error: RecommendationSystem] genBestMatchedTeams(): Your select method "
-          + "returned an Exception.");
+      System.out.println(
+          "[Error: RecommendationSystem] genBestMatchedTeams(): Your select method "
+              + "returned an Exception.");
     }
 
-    // check if student already exists in another team, if so, increment teamSize for next call to
-    // get more recommended students. Eventually will have all of them
-    // student A optimal for both students B and C
-    // prioritize students compatible with highest # of other students?
-    // what if total # of students not divisible by team size => return larger groups than desired.
-    // print results to REPL interface?
-
-    // handle missing columns?
+    System.out.println(AllTeams);
 
     // return serialized String version of results
-    return null;
+    return serializeBestMatchedTeams(AllTeams);
   }
+
+  private String serializeBestMatchedTeams(List<List<Student>> teams) {
+    StringBuilder str = new StringBuilder();
+    // TODO: append only ID?
+    for (List<Student> team : teams) {
+      for (Student student : team) {
+        str.append(student.toString());
+      }
+      str.append("\n");
+    }
+    return str.toString();
+  }
+
 }
