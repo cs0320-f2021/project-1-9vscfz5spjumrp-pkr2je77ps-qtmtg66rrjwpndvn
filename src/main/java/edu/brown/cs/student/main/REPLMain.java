@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
+import edu.brown.cs.student.api.ApiAggregator;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.main.command.Command;
 import edu.brown.cs.student.main.command.RecSysGenGroupsCommand;
@@ -24,6 +25,7 @@ import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
 import joptsimple.OptionSpec;
+import org.checkerframework.checker.units.qual.A;
 import spark.ExceptionHandler;
 import spark.ModelAndView;
 import spark.Request;
@@ -50,11 +52,9 @@ public final class REPLMain {
    * @param args An array of command line arguments
    */
   public static void main(String[] args) throws Exception {
-//    REPLMain repl = new REPLMain(args);
-//    repl.buildCommandMap();
-//    repl.run();
-    RecommendationSystem.getInstance().initDataManager("C:\\temp\\integration.sqlite3");
-    System.out.println(RecommendationSystem.getInstance().loadData());
+    REPLMain repl = new REPLMain(args);
+    repl.buildCommandMap();
+    repl.run();
   }
 
   protected void buildCommandMap() {
@@ -90,14 +90,17 @@ public final class REPLMain {
 
     DataManager manager = null;
     // support providing db file via cmd line argument --database=path/to/database
+    // set default sql database
+    String databaseName = "data/integration/integration.sqlite3";
     if (options.has("database")) {
-      try {
-        RecommendationSystem.getInstance().initDataManager(options.valueOf(databaseSpec));
-      } catch (SQLException e) {
-        e.printStackTrace();
-      } catch (ClassNotFoundException e) {
-        e.printStackTrace();
-      }
+      databaseName = options.valueOf(databaseSpec);
+    }
+    try {
+      RecommendationSystem.getInstance().initDataManager(databaseName);
+    } catch (SQLException e) {
+      e.printStackTrace();
+    } catch (ClassNotFoundException e) {
+      e.printStackTrace();
     }
 
 

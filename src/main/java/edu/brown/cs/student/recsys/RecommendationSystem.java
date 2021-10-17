@@ -3,6 +3,7 @@ package edu.brown.cs.student.recsys;
 import edu.brown.cs.student.api.ApiAggregator;
 import edu.brown.cs.student.bloomfilter.BloomFilterRecommender;
 import edu.brown.cs.student.bloomfilter.recommender.Item;
+import edu.brown.cs.student.entity.IdentityData;
 import edu.brown.cs.student.entity.Interests;
 import edu.brown.cs.student.entity.Negative;
 import edu.brown.cs.student.entity.Positive;
@@ -55,6 +56,7 @@ public class RecommendationSystem {
    * User Story 2. This will be implemented by Alyssa and moved here later
    */
   public String loadData() throws Exception {
+    // load data from sql database
     List<Object> skills = this.orm.select("", "", Skills.class);
     List<Object> negatives = this.orm.select("", "", Negative.class);
     List<Object> positives = this.orm.select("", "", Positive.class);
@@ -93,6 +95,17 @@ public class RecommendationSystem {
 
       Student student = idToStudent.get(studentInterest.getId());
       student.addInterest(studentInterest.getInterest());
+    }
+
+    // load data from API
+
+    ApiAggregator api = new ApiAggregator();
+    List<Object> identityData = api.getData();
+
+    for (Object value : identityData) {
+      IdentityData identity = (IdentityData) value;
+      Student student = idToStudent.get(identity.getId());
+      student.setIdentityData(identity);
     }
 
     return "Loaded Recommender with " + this.students.size() + " students.";
