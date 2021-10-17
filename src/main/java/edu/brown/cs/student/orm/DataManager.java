@@ -104,12 +104,19 @@ public class DataManager {
     // get all the field information from the class
     List<FieldInfo> fieldInfos = ClassInfoUtil.populateFieldInfo(objectClass);
 
+    String sqlStatement = "SELECT * from " + className;
+
+    if (!where.equals("") && (where != null)) {
+      sqlStatement += " WHERE " + where;
+    }
     // begin select statement
     PreparedStatement prep =
-        conn.prepareStatement("SELECT * from " + className + " WHERE " + where);
+        conn.prepareStatement(sqlStatement);
 
-    // fill in first question mark as value
-    prep.setString(1, value);
+    if (!value.equals("") && (value != null)) {
+      // fill in first question mark as value
+      prep.setString(1, value);
+    }
 
     // get the data set from the query
     ResultSet rs = prep.executeQuery();

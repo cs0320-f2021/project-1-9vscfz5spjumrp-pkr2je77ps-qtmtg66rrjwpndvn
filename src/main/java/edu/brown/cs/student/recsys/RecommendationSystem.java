@@ -3,12 +3,19 @@ package edu.brown.cs.student.recsys;
 import edu.brown.cs.student.api.ApiAggregator;
 import edu.brown.cs.student.bloomfilter.BloomFilterRecommender;
 import edu.brown.cs.student.bloomfilter.recommender.Item;
+import edu.brown.cs.student.entity.Interests;
+import edu.brown.cs.student.entity.Negative;
+import edu.brown.cs.student.entity.Positive;
+import edu.brown.cs.student.entity.Skills;
+import edu.brown.cs.student.entity.Student;
 import edu.brown.cs.student.kdtree.KDTree;
 import edu.brown.cs.student.orm.DataManager;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * RecommendationSystem is a proxy class that is used by the main REPL to simplify interactions
@@ -22,7 +29,7 @@ public class RecommendationSystem {
   private KDTree kdTree;
   // make RecommendationSystem singleton
   private static final RecommendationSystem recSys = new RecommendationSystem();
-  private String databaseName;
+  private List<Student> students;
 
   /**
    * The constructor only instantiates the API, as we need user input to instantiate
@@ -40,26 +47,55 @@ public class RecommendationSystem {
     return recSys;
   }
 
-  public void setDataBaseName(String databaseName) {
-    this.databaseName = databaseName;
+  public void initDataManager(String databaseName) throws SQLException, ClassNotFoundException {
+    this.orm = new DataManager(databaseName);
   }
 
   /**
    * User Story 2. This will be implemented by Alyssa and moved here later
    */
-  public String loadData() {
-    //TODO: get how many students there are after loading data into ORM, KD-Tree,
-    // and BloomFilter. Must instantiate all 3 objects
-    int k = 0;
-    String message = "";
-    //TODO: have error messages related to loading data
-    boolean error = false;
-    if (error) {
-      message = "Error: Fill out rest of error message";
-    } else {
-      message = "Loaded Recommender with " + k + " students.";
+  public String loadData() throws Exception {
+    List<Object> skills = this.orm.select("", "", Skills.class);
+    List<Object> negatives = this.orm.select("", "", Negative.class);
+    List<Object> positives = this.orm.select("", "", Positive.class);
+    List<Object> interests = this.orm.select("", "", Interests.class);
+    this.students = new ArrayList<>();
+
+    Map<Integer, Student> idToStudent = new HashMap<>();
+
+    for (Object skill : skills) {
+      Student student = new Student();
+      Skills studentSkills = (Skills) skill;
+
+      student.setSkills(studentSkills);
+
+      this.students.add(student);
+
+      idToStudent.put(studentSkills.getId(), student);
     }
-    return message;
+
+    for (Object negative : negatives) {
+      Negative studentNegative = (Negative) negative;
+
+      Student student = idToStudent.get(studentNegative.getId());
+      student.addNegative(studentNegative.getTrait());
+    }
+
+    for (Object positive : positives) {
+      Positive studentPositive = (Positive) positive;
+
+      Student student = idToStudent.get(studentPositive.getId());
+      student.addPositive(studentPositive.getTrait());
+    }
+
+    for (Object interest : interests) {
+      Interests studentInterest = (Interests) interest;
+
+      Student student = idToStudent.get(studentInterest.getId());
+      student.addInterest(studentInterest.getInterest());
+    }
+
+    return "Loaded Recommender with " + this.students.size() + " students.";
   }
 
   /**

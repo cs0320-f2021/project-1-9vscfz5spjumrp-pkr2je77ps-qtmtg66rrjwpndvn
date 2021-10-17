@@ -13,19 +13,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.collect.ImmutableMap;
-import edu.brown.cs.student.api.ApiAggregator;
-import edu.brown.cs.student.bloomfilter.BloomFilterRecommender;
 import edu.brown.cs.student.kdtree.KDTree;
-import edu.brown.cs.student.kdtree.UserKDObject;
 import edu.brown.cs.student.main.command.Command;
 import edu.brown.cs.student.main.command.RecSysGenGroupsCommand;
 import edu.brown.cs.student.main.command.RecSysLoadCommand;
 import edu.brown.cs.student.main.command.RecSysRecCommand;
 import edu.brown.cs.student.orm.DataManager;
-import edu.brown.cs.student.orm.Users;
 import edu.brown.cs.student.recsys.RecommendationSystem;
-import edu.brown.cs.student.stars.Star;
-import edu.brown.cs.student.stars.StarHandler;
 import freemarker.template.Configuration;
 import joptsimple.OptionParser;
 import joptsimple.OptionSet;
@@ -55,10 +49,12 @@ public final class REPLMain {
    *
    * @param args An array of command line arguments
    */
-  public static void main(String[] args) {
-    REPLMain repl = new REPLMain(args);
-    repl.buildCommandMap();
-    repl.run();
+  public static void main(String[] args) throws Exception {
+//    REPLMain repl = new REPLMain(args);
+//    repl.buildCommandMap();
+//    repl.run();
+    RecommendationSystem.getInstance().initDataManager("C:\\temp\\integration.sqlite3");
+    System.out.println(RecommendationSystem.getInstance().loadData());
   }
 
   protected void buildCommandMap() {
@@ -95,7 +91,13 @@ public final class REPLMain {
     DataManager manager = null;
     // support providing db file via cmd line argument --database=path/to/database
     if (options.has("database")) {
-      RecommendationSystem.getInstance().setDataBaseName(options.valueOf(databaseSpec));
+      try {
+        RecommendationSystem.getInstance().initDataManager(options.valueOf(databaseSpec));
+      } catch (SQLException e) {
+        e.printStackTrace();
+      } catch (ClassNotFoundException e) {
+        e.printStackTrace();
+      }
     }
 
 
