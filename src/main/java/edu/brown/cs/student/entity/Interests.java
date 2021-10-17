@@ -1,5 +1,8 @@
 package edu.brown.cs.student.entity;
 
+/**
+ * class for interests
+ */
 public class Interests {
   private int id;
   private String interest;

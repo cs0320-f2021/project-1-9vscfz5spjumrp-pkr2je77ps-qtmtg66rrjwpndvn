@@ -33,6 +33,11 @@ public class ApiAggregator {
     return gson.fromJson(best_response, type);
   }
 
+  /**
+   * make post request to api
+   * @return list of objects
+   * @throws Exception
+   */
   public List<Object> getData() throws Exception {
     Gson gson = new Gson();
     String response = client.makeRequest(ClientRequestGenerator.getSecuredPostRequest());

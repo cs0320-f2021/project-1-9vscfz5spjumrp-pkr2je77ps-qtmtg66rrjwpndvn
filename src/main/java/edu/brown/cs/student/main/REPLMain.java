@@ -57,6 +57,9 @@ public final class REPLMain {
     repl.run();
   }
 
+  /**
+   * build hashmap of string to command
+   */
   protected void buildCommandMap() {
     commandMap.put("recsys_load", new RecSysLoadCommand());
     commandMap.put("recsys_rec", new RecSysRecCommand());
@@ -122,6 +125,7 @@ public final class REPLMain {
           input = input.trim();
           String[] arguments = input.split(" ");
 
+          // execute repl commands
           commandMap.get(arguments[0]).execute(arguments);
 
 //          switch (arguments[0]) {

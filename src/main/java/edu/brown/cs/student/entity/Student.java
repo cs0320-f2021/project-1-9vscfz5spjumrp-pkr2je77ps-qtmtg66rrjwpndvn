@@ -3,6 +3,9 @@ package edu.brown.cs.student.entity;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class Student, storing all information
+ */
 public class Student {
   private int id;
   private String name;

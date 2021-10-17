@@ -1,5 +1,8 @@
 package edu.brown.cs.student.entity;
 
+/**
+ * class for positive
+ */
 public class Positive {
   private int id;
   private String trait;
