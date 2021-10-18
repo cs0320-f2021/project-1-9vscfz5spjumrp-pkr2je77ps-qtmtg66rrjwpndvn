@@ -1,5 +1,8 @@
 package edu.brown.cs.student.entity;
 
+/**
+ * class for negative
+ */
 public class Negative {
   private int id;
   private String trait;

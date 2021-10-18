@@ -51,12 +51,20 @@ public class RecommendationSystem {
     return recSys;
   }
 
+  /**
+   * Initialize the orm
+   * @param databaseName database file
+   * @throws SQLException
+   * @throws ClassNotFoundException
+   */
   public void initDataManager(String databaseName) throws SQLException, ClassNotFoundException {
     this.orm = new DataManager(databaseName);
   }
 
   /**
-   * User Story 2. This will be implemented by Alyssa and moved here later
+   * method to load student data into list of students
+   * @return string saying how many students were loaded in
+   * @throws Exception
    */
   public String loadData() throws Exception {
     // load data from sql database
@@ -66,8 +74,10 @@ public class RecommendationSystem {
     List<Object> interests = this.orm.select("", "", Interests.class);
     this.students = new ArrayList<>();
 
+    // hashmap of id to student
     Map<Integer, Student> idToStudent = new HashMap<>();
 
+    // add skills, add student to hashmap
     for (Object skill : skills) {
       Student student = new Student();
       Skills studentSkills = (Skills) skill;
@@ -79,6 +89,7 @@ public class RecommendationSystem {
       idToStudent.put(studentSkills.getId(), student);
     }
 
+   // add negative traits to student
     for (Object negative : negatives) {
       Negative studentNegative = (Negative) negative;
 
@@ -86,6 +97,7 @@ public class RecommendationSystem {
       student.addNegative(studentNegative.getTrait());
     }
 
+    // add positive traits to student
     for (Object positive : positives) {
       Positive studentPositive = (Positive) positive;
 
@@ -93,6 +105,7 @@ public class RecommendationSystem {
       student.addPositive(studentPositive.getTrait());
     }
 
+    // add interests to student
     for (Object interest : interests) {
       Interests studentInterest = (Interests) interest;
 
@@ -105,6 +118,7 @@ public class RecommendationSystem {
     ApiAggregator api = new ApiAggregator();
     List<Object> identityData = api.getData();
 
+    // add identity fields to student
     for (Object value : identityData) {
       IdentityData identity = (IdentityData) value;
       Student student = idToStudent.get(identity.getId());
