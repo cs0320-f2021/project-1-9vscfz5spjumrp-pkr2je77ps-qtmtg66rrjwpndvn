@@ -39,7 +39,7 @@ public class ClientRequestGenerator {
     String apiKey = ClientAuth.getApiKey();
 
     HttpRequest request = HttpRequest.newBuilder().uri(URI.create(reqUri))
-        .POST(HttpRequest.BodyPublishers.ofString("{\"auth\":\"" + "acong3" + "\"}"))
+        .POST(HttpRequest.BodyPublishers.ofString("{\"auth\":\"" + "bkilimni" + "\"}"))
         .header("x-api-key", apiKey)
         .build();
     return request;
