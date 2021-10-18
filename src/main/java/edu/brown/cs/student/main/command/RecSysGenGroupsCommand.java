@@ -10,7 +10,7 @@ public class RecSysGenGroupsCommand implements Command {
       System.out.println(
           "Error: Invalid number of arguments provided to the 'recsys_rec' command."
               + "Your REPL input should follow the following format:"
-              + "recsys_rec <team_size>");
+              + "recsys_gen_groups <team_size>");
     }
     //parse teamSize argument
     int teamSize = Integer.parseInt(args[1]);
