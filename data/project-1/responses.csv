@@ -1,0 +1,17 @@
+Timestamp,Rate your comfort with the ORM component,Rate your comfort with the API component,Rate your comfort with the KDTree component,Rate your comfort with the bloom filter component,How often do you like checking in with your group?,Through what medium do you like checking in with your group?,What times of day are you responsive to work questions (EST)?,How do you typically like to distribute workload over the time between project release and deadline?,Which track would you prefer to work on for Sprint 2?,How would you describe your gender identity?,Would you prefer to be matched with someone else who shares this identity (if possible)?,How would you describe your ethnic/racial identity?,Would you prefer to be matched with someone else who shares this identity (if possible)?
+9/3/2021 16:03:22,0,7,7,0,Daily,Pigeons,Early Morning,Evenly distributed,Pathfinding,,,,
+9/3/2021 16:07:29,4,6,8,1,After a task is completed,Messaging,"Afternoon, Evening, Night",More work closer to deadline,Pathfinding,Female,Yes,Asian,Yes
+9/3/2021 16:07:38,8,3,3,7,Daily,In-person,"Late Morning, Afternoon, Evening, Night",Evenly distributed,Pathfinding,Male,No,White,No
+9/3/2021 16:09:26,9,1,9,8,Every few days,In-person,Late Morning,Don't do the work,Pathfinding,,,,
+9/3/2021 16:09:38,0,0,0,0,Never,Messaging,Early Morning,More work closer to deadline,Front-end UI,Female,Yes,Black,I don't mind
+9/3/2021 16:10:03,7,3,9,3,What group?,Telepathy,"Early Morning, Late Morning, Afternoon, Evening, Night",After the deadline,Front-end UI,,,,
+9/3/2021 16:10:04,9,8,8,2,Weekly,In-person,Night,More work closer to project release,Front-end UI,,,Black,Yes
+9/3/2021 16:10:12,5,5,5,5,Every few days,Zoom,"Late Morning, Evening",More work closer to project release,Pathfinding,Non-binary,Yes,Hispanic,Yes
+9/3/2021 16:22:20,5,3,7,4,Every few days,In-person,"Early Morning, Night",Evenly distributed,Front-end UI,,,,
+9/5/2021 14:20:03,2,8,6,0,Every few days,In-person,"Late Morning, Night",More work closer to project release,Front-end UI,Male,,Indigenous,
+9/5/2021 14:20:18,1,7,3,3,Daily,In-person,"Late Morning, Night",Evenly distributed,Pathfinding,,,,
+9/5/2021 14:20:19,5,1,8,6,After a task is completed,In-person,"Afternoon, Evening",More work closer to deadline,Front-end UI,Non-binary,Yes,,
+9/5/2021 14:20:47,2,4,2,8,Daily,Messaging,Late Morning,More work closer to project release,Pathfinding,,No,Native American,Yes
+9/5/2021 14:20:49,5,3,4,7,Every few days,Zoom,"Early Morning, Afternoon",More work closer to deadline,Front-end UI,raw masculinity. think ron swanson. ,I don't mind,wasp,I don't mind
+9/5/2021 14:20:52,0,0,2,2,After a task is completed,Messaging,"Afternoon, Night",More work closer to deadline,Front-end UI,Female,Yes,,
+9/5/2021 14:21:44,6,10,8,3,Every few days,Messaging,"Late Morning, Afternoon, Evening, Night",Evenly distributed,Pathfinding,cisgender man,I don't mind,east asian,I don't mind

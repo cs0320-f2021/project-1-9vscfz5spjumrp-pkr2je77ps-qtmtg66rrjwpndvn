@@ -1,12 +1,9 @@
 package edu.brown.cs.student.main;
 
 import org.junit.Test;
-import edu.brown.cs.student.main.KDTree.*;
+import edu.brown.cs.student.kdtree.*;
 import edu.brown.cs.student.main.KDDummyClasses.ThreeDimTestObject;
-import edu.brown.cs.student.main.KDDummyClasses.FourDimTestObject;
-
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
