@@ -10,10 +10,14 @@ import edu.brown.cs.student.entity.Positive;
 import edu.brown.cs.student.entity.Skills;
 import edu.brown.cs.student.entity.Student;
 import edu.brown.cs.student.kdtree.KDTree;
+import edu.brown.cs.student.main.command.Command;
 import edu.brown.cs.student.orm.DataManager;
+import edu.brown.cs.student.orm.Users;
+import org.checkerframework.checker.units.qual.A;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +54,7 @@ public class RecommendationSystem {
 
   /**
    * Initialize the orm
+   *
    * @param databaseName database file
    * @throws SQLException
    * @throws ClassNotFoundException
@@ -60,6 +65,7 @@ public class RecommendationSystem {
 
   /**
    * method to load student data into list of students
+   *
    * @return string saying how many students were loaded in
    * @throws Exception
    */
@@ -86,7 +92,7 @@ public class RecommendationSystem {
       idToStudent.put(studentSkills.getId(), student);
     }
 
-   // add negative traits to student
+    // add negative traits to student
     for (Object negative : negatives) {
       Negative studentNegative = (Negative) negative;
 
@@ -122,6 +128,29 @@ public class RecommendationSystem {
       student.setIdentityData(identity);
     }
 
+    // instantiate KDTree
+    List<String> fields = new ArrayList<>();
+    fields.add("commenting");
+    fields.add("testing");
+    fields.add("OOP");
+//    fields.add("algorithms");
+//    fields.add("teamwork");
+//    fields.add("frontend");
+//    fields.add("negatives");
+//    fields.add("positives");
+//    fields.add("interests");
+//    fields.add("meeting");
+//    fields.add("grade");
+//    fields.add("years_of_experience");
+//    fields.add("horoscope");
+//    fields.add("meeting_times");
+//    fields.add("preferred_language");
+//    fields.add("marginalized_groups");
+//    fields.add("prefer_group");
+    if (this.kdTree == null) {
+      this.kdTree = new KDTree(new ArrayList<Object>(this.students), 3, fields);
+    }
+
     return "Loaded Recommender with " + this.students.size() + " students.";
   }
 
@@ -129,24 +158,30 @@ public class RecommendationSystem {
    * User Story 3: generate recommendations for a particular student’s team
    */
   public String genRecsForTeam(int numRecs, int studentId) {
-    //get numeric recommendations
-    //TODO: ask Alyssa how to get the student
-    List<Object> students = null;
+    String string_recs = "";
     try {
-      students = orm.select("", "", Object.class);
+      for (Student student : this.students) {
+        System.out.println("Checking condition for student: " + student.getId());
+        if (student.getId() == studentId) {
+          System.out.println("Generating recommendations for: " + student.getId());
+          //get numerical recommendations
+          List<Object> numericRecommendations = kdTree.kNearestNeighbors(student, numRecs);
+          System.out.println("NUMERIC" + numericRecommendations);
+          //get categorical recommendations
+          List<Object> categoricalRecommendations =
+              bloomFilterRecommender.getTopKRecommendations((Item) student, numRecs);
+          System.out.println("CATEGORICAL" + categoricalRecommendations);
+          List<Object> recs =
+              combineRecommendations(numRecs, numericRecommendations, categoricalRecommendations);
+          System.out.println("COMBINED: " + recs);
+          string_recs = serializeRecs(recs);
+          System.out.println(string_recs);
+        }
+      }
     } catch (Exception e) {
-      System.out.println("[Error: RecommendationSystem] genRecsForTeam(): Your select method "
-          + "returned an Exception.");
+      System.out.println("[Error: RecommendationSystem] genRecsForTeam(): returned an exception");
     }
-    Object student = students.get(0);
-    List<Object> numericRecommendations = kdTree.kNearestNeighbors(student, numRecs);
-    //get categorical recommendations
-
-    List<Object> categoricalRecommendations =
-        bloomFilterRecommender.getTopKRecommendations((Item) student, numRecs);
-    List<Object> recs =
-        combineRecommendations(numRecs, numericRecommendations, categoricalRecommendations);
-    return serializeRecs(recs);
+    return string_recs;
   }
 
   private List<Object> combineRecommendations(int numRecs, List<Object> numericRecommendations,
@@ -177,8 +212,95 @@ public class RecommendationSystem {
 
   /**
    * User Story 4: generate the set of best matched teams across the entire class
+   *
+   * @param teamSize - size of individual teams
+   * @return a String representation of the best matched teams for all students
+   * in the dataset. Return value has the following structure
+   * List<
+   * List<[group_1_student_1, group_1_student_2, … group_1_student_k]>
+   * List<[group_2_student_1, group_2_student_2, … group_2_student_k]>
+   * ...
+   * List<[group_n_student_1, group_n_student_2, … group_n_student_k]>
+   * >
    */
-  public List<Object> genBestMatchedTeams() {
-    return null;
+  public String genBestMatchedTeams(int teamSize) {
+    // hashmap of student to their recs
+    Map<Object, List<Object>> studentRecs = new HashMap<>();
+
+    // list to store all teams
+    List<List<Student>> AllTeams = new ArrayList<>();
+
+    try {
+      //  if the total number of students is not divisible by teamSize
+      //  return larger groups than desired in input teamSize
+      //  Because smaller teams might be overwhelmed by the work
+      if (this.students.size() % teamSize != 0) {
+        teamSize++;
+      }
+      // generate recommendations for every student in the dataset
+      for (Student student : this.students) {
+        // get numeric recommendations
+        List<Object> numericRecommendations =
+            kdTree.kNearestNeighbors(student, this.students.size());
+        // get categorical recommendations
+        List<Object> categoricalRecommendations =
+            bloomFilterRecommender.getTopKRecommendations((Item) student, this.students.size());
+        // combine recommendations
+        List<Object> AllRecsForStudent =
+            combineRecommendations(teamSize, numericRecommendations, categoricalRecommendations);
+
+        // add student (key) recs (value) to hashmap
+        studentRecs.put(student, AllRecsForStudent);
+      }
+
+      // loop through map and assign highest recommended students to this students' team
+      for (Map.Entry<Object, List<Object>> student : studentRecs.entrySet()) {
+        List<Object> newTeam = new ArrayList();
+
+        // check if this student is already in another team
+        for (List<Student> team : AllTeams) {
+          // if student doesn't already exist in another team, add it as first member of newTeam
+          if (!team.contains(student.getKey())) {
+            newTeam.add(student.getKey());
+          }
+        }
+
+        int teamMembersAdded = teamSize;
+        // search for highest recommended teammates for this student
+        // looping over all recommendations for this student in the map<student : List<Students>>
+        for (Object rec : student.getValue()) {
+          // while team hasn't reached capacity
+          while (teamMembersAdded != 0) {
+            // check if this student is already in another team
+            for (List<Student> team : AllTeams) {
+              // if student isn't in another team, add it to newTeam
+              if (!team.contains((Student) rec)) {
+                newTeam.add((Student) rec);
+                teamMembersAdded--;
+              }
+            }
+          }
+        }
+      }
+    } catch (Exception e) {
+      System.out.println(
+          "[Error: RecommendationSystem] genBestMatchedTeams() returned an Exception.");
+    }
+
+    // return serialized String version of results
+    return serializeBestMatchedTeams(AllTeams);
   }
+
+  private String serializeBestMatchedTeams(List<List<Student>> teams) {
+    StringBuilder str = new StringBuilder();
+    // TODO: append only ID, not entire student
+    for (List<Student> team : teams) {
+      for (Student student : team) {
+        str.append(student.toString());
+      }
+      str.append("\n");
+    }
+    return str.toString();
+  }
+
 }
