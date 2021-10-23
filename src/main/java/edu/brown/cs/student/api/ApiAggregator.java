@@ -4,8 +4,11 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.*;
 import edu.brown.cs.student.api.client.ApiClient;
 import edu.brown.cs.student.api.client.ClientRequestGenerator;
+import edu.brown.cs.student.entity.IdentityData;
 
 import java.lang.reflect.Type;
+import java.net.URI;
+import java.net.http.HttpRequest;
 import java.util.List;
 
 public class ApiAggregator {
@@ -28,6 +31,17 @@ public class ApiAggregator {
     response2 = generateExtras("two", filename, response2);
     String best_response = response1.length() > response2.length() ? response1 : response2;
     return gson.fromJson(best_response, type);
+  }
+
+  /**
+   * make post request to api
+   * @return list of objects
+   * @throws Exception
+   */
+  public List<Object> getData() throws Exception {
+    Gson gson = new Gson();
+    String response = client.makeRequest(ClientRequestGenerator.getSecuredPostRequest());
+    return gson.fromJson(response, setType("identityData"));
   }
 
   /**
@@ -62,24 +76,9 @@ public class ApiAggregator {
    */
   public Type setType(String dataType) throws Exception {
     Type type;
-
-        /*
-
-        Example usage from Project 1: Sprint...
-
-        if(dataType.equals("rent")){
-            return new TypeToken<List<Rent>>(){}.getType();
-        }else if(dataType.equals("reviews")){
-            return new TypeToken<List<Review>>(){}.getType();
-        }else if (dataType.equals("users")){
-            return new TypeToken<List<User>>(){}.getType();
-        }else {
-            throw new Exception("The aggregator does not contain a content type called: " + dataType);
-        }
-        */
-
-
-    // dummy return
+    if (dataType.equals("identityData")) {
+      return new TypeToken<List<IdentityData>>(){}.getType();
+    }
     return new TypeToken<List<Object>>() {
     }.getType();
   }
